@@ -19,7 +19,7 @@ export class apiHttpSpringBootService {
   // http://api-spring-boot-crowdlending-api-spring-boot-crowdlending.apps.us-east-2.starter.openshift-online.com/api
 
   // tslint:disable-next-line:max-line-length
-  private apiUrlCloud = 'http://api-spring-boot-crowdlending-api-spring-boot-crowdlending.apps.us-east-2.starter.openshift-online.com/api';
+  private apiUrlCloud = 'https://api-springboot-crowdfunding-h2.herokuapp.com/api';
 
 
 
@@ -29,7 +29,7 @@ export class apiHttpSpringBootService {
 
       if (baseUrl === 'http://localhost:4200/'){
 
-           this.apiUrlCloud = 'http://localhost:8080/api';
+           this.apiUrlCloud = 'https://api-springboot-crowdfunding-h2.herokuapp.com/api';
 
       }
   }

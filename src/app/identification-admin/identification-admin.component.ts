@@ -1,10 +1,10 @@
 import { Component, OnInit, ElementRef, ViewChild, EventEmitter} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-
 import { apiHttpSpringBootService } from './../api-spring-boot.service';
 import { CookieService } from 'ngx-cookie-service';
 import { DatePipe } from '@angular/common';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
+import { Title } from '@angular/platform-browser';
 
 declare var window: any;
 
@@ -53,9 +53,10 @@ export class IdentificationAdminComponent implements OnInit {
 
 
   constructor(private route: ActivatedRoute, private router: Router, private apiService: apiHttpSpringBootService,
-              private cookie: CookieService, private datePipe: DatePipe, private ngxService: NgxUiLoaderService) {
+              private cookie: CookieService, private datePipe: DatePipe,
+              private ngxService: NgxUiLoaderService, private titleService: Title) {
 
-
+                this.titleService.setTitle('Espace-identification');
    /* this.route.params.subscribe(params => {
 
       alert(params['action']);
@@ -65,8 +66,6 @@ export class IdentificationAdminComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
-    /********************************************************* */
 
     this.addRecaptchaScript();
 
@@ -94,7 +93,7 @@ export class IdentificationAdminComponent implements OnInit {
 
   renderReCaptcha() {
     window.grecaptcha.render(this.recaptchaElement.nativeElement, {
-      sitekey : '6Lf4I6gZAAAAAMp1E9YI1FJghdQ20CNRtAV9d55y',
+      sitekey: '6Lf4I6gZAAAAAMp1E9YI1FJghdQ20CNRtAV9d55y',
       callback: (response) => {
           console.log('response', response);
 

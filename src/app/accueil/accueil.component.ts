@@ -1,9 +1,13 @@
 import { Component, OnInit} from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import {Router} from '@angular/router';
 import { apiHttpSpringBootService } from './../api-spring-boot.service';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { DatePipe } from '@angular/common';
-import {UserModel, ProjectModel, templteProjectModel} from '../interfaces/models';
+import {ProjectModel, templteProjectModel} from '../interfaces/models';
+import { CookieService } from 'ngx-cookie-service';
+
+declare var navigator: any;
 
 @Component({
   selector: 'app-accueil',
@@ -22,14 +26,29 @@ export class AccueilComponent implements OnInit {
 
   public paramObjectUpdate = {action_update : false};
 
-  constructor(private router: Router, private apiService: apiHttpSpringBootService
+  public userLang: any;
+
+
+
+  constructor(private router: Router, private apiService: apiHttpSpringBootService, private titleService: Title
               // tslint:disable-next-line:align
-              , private ngxService: NgxUiLoaderService, private datePipe: DatePipe) {
+              , private ngxService: NgxUiLoaderService, private datePipe: DatePipe, private cookie: CookieService) {
 
-      this.getListProjects(this.paramObjectUpdate);
-     }
+                this.titleService.setTitle('accueil');
 
-  ngOnInit(): void { }
+                this.getListProjects(this.paramObjectUpdate);
+
+   }
+
+  ngOnInit(): void {
+
+
+            this.userLang = navigator.language || navigator.userLanguage;
+            alert('this.userLang = ' + this.userLang );
+
+
+   }
+
 
   getListProjects(paramObjectUpdate){
 
@@ -104,7 +123,7 @@ export class AccueilComponent implements OnInit {
 
     const date2 = new Date(this.listProjects[indexProject].date_limite_collecte);
 
-    const diff = this.dateDiff(date1, date2);   
+    const diff = this.dateDiff(date1, date2);
 
     return  'J-' + diff.day;
 

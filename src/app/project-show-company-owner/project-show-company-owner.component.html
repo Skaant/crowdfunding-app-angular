@@ -49,10 +49,78 @@
 
                             <img class="card-img-top" [src]="ObjetProjectTemplate.heartUser" (click)="addHeartProject()" alt="" style="width :35px;height:35px;z-index: 10;margin-left:92%" >
 
-                            <img class="card-img-top" [src]="ObjetProjectTemplate.srcFavorisProject" (click)="addFavorisProject()" alt="" style="width :35px;height:35px;z-index: 11;margin-left:92%" >
+                            <img class="card-img-top" [src]="ObjetProjectTemplate.srcFavorisProject" (click)="addFavorisProject()" alt="" style="width :35px;height:38px;z-index: 11;margin-left:92%;margin-top:2%" >
+
+                            <div style="z-index: 12;margin-left:92%;margin-top:2%">
+
+                              <img class="card-img-top" [src]="ObjetProjectTemplate.likeUsers" (click)="addLikeProject()" alt="" style="width :35px;height:40px;" >
+
+                             <!-- <img class="card-img-top" [src]="ObjetProjectTemplate.dislikeUser" (click)="addDislikeProject()" alt="" style="width :35px;height:35px;float :right" >-->
+
+
+                            </div>
+
+                            <div style="z-index: 13;margin-left:92%;margin-top:3%">
+
+                             <!-- <img class="card-img-top" [src]="ObjetProjectTemplate.likeUsers" (click)="addLikeProject()" alt="" style="width :35px;height:35px;float :left" >-->
+
+                              <img class="card-img-top" [src]="ObjetProjectTemplate.dislikeUser" (click)="addDislikeProject()" alt="" style="width :35px;height:40px;" >
+
+
+                            </div>
+
+                           
 
                             <img mat-card-image [src]="ObjetProjectTemplate.project.afficheProject" alt=""     style="text-align:center;margin-left:10%;width:50%;height :50%">
 
+                            <table  style="margin-left: 25%;">
+
+                              <tr>
+
+                                <td width="10%">                                
+
+                                  <img class="card-img-top" src="./assets/img/heart-icon.png"  alt="" style="width :35px;height:35px;" >
+
+                                  <span>{{ObjetProjectTemplate.project.total_hearts}}</span>
+
+                                </td>
+
+                                <td width="30%"  style="text-align: center;">                                
+
+                                  <img class="card-img-top" src="./assets/img/like_ico.png"  alt="" style="width :35px;height:35px;" >
+
+                                  <span>{{ObjetProjectTemplate.project.total_like}}</span>
+                                  
+                                </td>
+
+                                <td width="20%">                                     
+
+                                  <img class="card-img-top" src="./assets/img/dislike_ico.png"  alt="" style="width :35px;height:35px;" >
+
+                                  <span>{{ObjetProjectTemplate.project.total_dislike}}</span>
+                                  
+                                </td>
+
+                                <td width="20%">                                     
+
+                                  <img class="card-img-top" src="./assets/img/eye_ico.png"  alt="" style="width :38px;height:35px;" >
+
+                                  <span>{{ObjetProjectTemplate.project.total_vues}}</span>
+                                  
+                                </td>
+
+                                <td width="20%">                                     
+
+                                  <img class="card-img-top" src="./assets/img/picto-dons-300x300.png"  alt="" style="width :38px;height:35px;" >
+
+                                  <span>{{ObjetProjectTemplate.project.total_fonds}} &euro;</span>
+                                  
+                                </td>
+
+                              </tr>
+                            </table>
+
+                            
                           </div>
 
                         </div>
@@ -186,7 +254,7 @@
               </ngb-tab>
 
 
-              <ngb-tab>
+              <ngb-tab *ngIf="arrayAdressReseauxSociauxProject.length>0">
 
                 <ng-template ngbTabTitle>Contact</ng-template>
 
@@ -200,7 +268,35 @@
 
                         <div class="card-body">
 
-                          <h3>{{objectAdresse.valueMedia}} : {{objectAdresse.linkProject}}</h3>
+
+                          <table>
+  
+                            <tr>
+                              <td>
+
+                                <h3 *ngIf="objectAdresse.keyMedia === 'num_tel'"><img  src="./assets/img/tel_ico.png"  style="width:30px"  /> {{objectAdresse.valueMedia}} : </h3> 
+
+                                <h3 *ngIf="objectAdresse.keyMedia === 'link_facbook'"><img  src="./assets/img/facebook_ico.png"  style="width:40px"  />{{objectAdresse.valueMedia}} : </h3> 
+
+                                <h3 *ngIf="objectAdresse.keyMedia === 'site_internet'"><img  src="./assets/img/site_web_ico.png"  style="width:40px"  />{{objectAdresse.valueMedia}} : </h3> 
+
+                                <h3 *ngIf="objectAdresse.keyMedia === 'link_youtube'"><img  src="./assets/img/youtube_ico.png"  style="width:40px"  />{{objectAdresse.valueMedia}} : </h3> 
+
+                                <h3 *ngIf="objectAdresse.keyMedia === 'link_google_plus'"><img  src="./assets/img/google_ico.png"  style="width:40px"  />{{objectAdresse.valueMedia}} : </h3> 
+
+                                <h3 *ngIf="objectAdresse.keyMedia === 'link_twitter'"><img  src="./assets/img/twitter_ico.png"  style="width:40px"  />{{objectAdresse.valueMedia}} : </h3> 
+
+                                
+
+                              </td>
+                              <td>
+
+                                    <h3>{{objectAdresse.linkProject}}</h3>
+                              </td>                             
+
+                            </tr>
+                            
+                          </table>                       
 
 
                         </div>
@@ -415,6 +511,52 @@
 
 
               </ng-template>
+
+            </ngb-tab>
+
+            <ngb-tab>
+
+              <ng-template ngbTabTitle>Les news de projet</ng-template>
+
+              <ng-template ngbTabContent>
+
+                <div class="row" style="margin-top:2%;margin-left:5%;">
+
+
+                  <div class="col-lg-8" style="margin-top:5%">
+
+                    <h3>Les news de projet</h3>
+                    <ul class="list-group">
+                      <li class="list-group-item" *ngFor="let objectNews of listNewsProject; let i = index ">
+                        <div class="row">
+                          <div class="col-lg-2 col-xs-2 col-md-1">
+                            <img [src]="objectNews.photos" class="img-circle img-responsive" style="width: 100%;"
+                              alt="" />
+                          </div>
+                          <div class="col-lg-10 col-xs-10 col-md-11">
+                            <div>
+                              <a href="#">{{objectNews.titre}} </a>
+                              <div class="mic-info">
+                                {{objectNews.date_created}}
+                              </div>
+                            </div>
+                            <div class="comment-text">
+                              {{objectNews.description}}
+                            </div>
+
+                          </div>
+                        </div>
+                      </li>
+
+
+                    </ul>
+                  </div>
+
+
+                 </div>
+                 
+              </ng-template>                   
+              
 
             </ngb-tab>
 

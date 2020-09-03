@@ -1,16 +1,25 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild} from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { apiHttpSpringBootService } from './../api-spring-boot.service';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { DatePipe } from '@angular/common';
 import { DomSanitizer } from '@angular/platform-browser';
+import { ImageService } from './../image.service';
 import {
    UserModel, ProjectModel, templteProjectModel, ImageProjectModel, AdressReseauxSociauxProjectModel, commentProjectModel,
-   QuestionRepProjectByAdminForUserModel, QuestionRepProjectByUserForAdminModel,
-   QuestionRepProjectByUserForUserModel, InvestiteurProjectModel, fondInvestor
+   // tslint:disable-next-line:max-line-length
+   QuestionRepProjectByAdminForUserModel, QuestionRepProjectByUserForAdminModel, StatistiquesChartsHeartModel, StatistiquesChartsVueModel,
+   // tslint:disable-next-line:max-line-length
+   QuestionRepProjectByUserForUserModel, InvestiteurProjectModel, fondInvestor, StatistiquesChartsLikeModel, StatistiquesChartsDislikesModel, NewsProjectModel
 } from '../interfaces/models';
 
+import { ChartOptions, ChartType, ChartDataSets } from 'chart.js';
+import { Color, Label, MultiDataSet } from 'ng2-charts';
+
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+
+import Swal from 'sweetalert2/dist/sweetalert2.js';
 
 declare var window: any;
 
@@ -20,6 +29,8 @@ declare var window: any;
    styleUrls: ['./my-project-show-company-owner.component.css']
 })
 export class MyProjectShowCompanyOwnerComponent implements OnInit {
+
+   @ViewChild('recaptcha', {static: true }) recaptchaElement: ElementRef;
 
    public infosUser: UserModel = new UserModel();
 
@@ -85,11 +96,107 @@ export class MyProjectShowCompanyOwnerComponent implements OnInit {
 
    public listFonsInvest: Array<fondInvestor> = [];
 
+   /*************************************************************** */
+
+   barChartOptions: ChartOptions = {
+      responsive: true,
+     };
+   barChartType: ChartType = 'bar';
+   barChartLegend = true;
+   barChartPlugins = [];
+
+   barChartLabelsHearts: Label[] = [];
+   barChartDataHearts: ChartDataSets[] = [  { data: [], label: 'Nombre de coup de coeur ' } ];
+
+   barChartLabelsVues: Label[] = [];
+   barChartDataVues: ChartDataSets[] = [  { data: [], label: 'Nombre de vue  ' } ];
+
+   barChartLabelsLikes: Label[] = [];
+   barChartDataLikes: ChartDataSets[] = [  { data: [], label: 'Nombre de likes  ' } ];
+
+   barChartLabelsDislikes: Label[] = [];
+   barChartDataDislikes: ChartDataSets[] = [  { data: [], label: 'Nombre de dsilikes  ' } ];
+
+/********************************************************************* */
+
+   barChartLabelsDaysHearts: Label[] = [];
+   barChartDataDaysHearts: ChartDataSets[] = [  { data: [], label: 'Nombre de coup de coeur ' } ];
+
+   barChartLabelsDaysVues: Label[] = [];
+   barChartDataDaysVues: ChartDataSets[] = [  { data: [], label: 'Nombre de vue  ' } ];
+
+   barChartLabelsDaysLikes: Label[] = [];
+   barChartDataDaysLikes: ChartDataSets[] = [  { data: [], label: 'Nombre de likes  ' } ];
+
+   barChartLabelsDaysDislikes: Label[] = [];
+   barChartDataDaysDislikes: ChartDataSets[] = [  { data: [], label: 'Nombre de dsilikes  ' } ];
 
 
-   constructor(private router: Router, private route: ActivatedRoute, private cookie: CookieService, 
+/********************************************************************* */
+
+   public isShowChartsMens = true;
+
+   public isShowChartsDays = false;
+
+   public isShowFormSelectDays = false;
+
+   public datePickerConfig = {
+                       drops: 'down',
+                       format: 'YYYY',
+                       monthFormat: 'YYYY',
+                       locale: 'fr',
+                       addClass: 'form-control'
+    };
+
+    public datePickerConfigBis = {
+      drops: 'down',
+      format: 'MM',
+      monthFormat: 'MM',
+      locale: 'fr',
+      addClass: 'form-control'
+    };
+
+public ObjetOptionStatMonth: { year: string , month: string} = {year : '', month : ''};
+
+public listYearProject = [];
+
+
+
+
+/********************************************************************* */
+
+// tslint:disable-next-line:ban-types
+public options: Object = {
+                        charCounterCount: true,
+                        attribution: false,
+                        placeholderText: 'Décrivez brièvement votre nouvelle de projet *',
+                        heightMin: 200
+ /*  toolbarButtons: ['bold', 'italic', 'underline', 'paragraphFormat', 'alert'],
+   toolbarButtonsXS: ['bold', 'italic', 'underline', 'paragraphFormat', 'alert'],
+   toolbarButtonsSM: ['bold', 'italic', 'underline', 'paragraphFormat', 'alert'],
+   toolbarButtonsMD: ['bold', 'italic', 'underline', 'paragraphFormat', 'alert'],*/
+ };
+
+ public addNewsProjectForm: FormGroup;
+
+ public submitted = false;
+
+ public ObjetNewsProject: NewsProjectModel = new NewsProjectModel();
+
+ private isvalidCaptcha = false ;
+
+ public isErreurCaptcha = false;
+
+ public imageFileNews: File;
+
+ public srcImageNews = 'http://placehold.it/500x325';
+
+ public listNewsProject: Array<NewsProjectModel> = [];
+
+/********************************************************************* */
+   constructor(private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute, private cookie: CookieService,
                private apiService: apiHttpSpringBootService, private ngxService: NgxUiLoaderService,
-                private datePipe: DatePipe, public sanitizer: DomSanitizer) {
+               private datePipe: DatePipe, public sanitizer: DomSanitizer, private imageService: ImageService) {
 
       if (this.cookie.get('infosUser')) {
 
@@ -133,7 +240,166 @@ export class MyProjectShowCompanyOwnerComponent implements OnInit {
 
    }
 
-   ngOnInit(): void { }
+   ngOnInit(): void {
+
+      this.addNewsProjectForm = this.formBuilder.group({
+                                                      titreNews: ['', Validators.required],
+                                                      descriptionNews: ['', Validators.required],
+
+       });
+
+      this.addRecaptchaScript();
+
+   }
+
+   tinyAlert(message: string){
+
+      Swal.fire(message);
+   }
+
+   addRecaptchaScript() {
+
+      window.grecaptchaCallback = () => {
+        this.renderReCaptcha();
+      };
+
+      (function(d, s, id, obj){
+        let js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) { obj.renderReCaptcha(); return; }
+        js = d.createElement(s); js.id = id;
+        js.src = 'https://www.google.com/recaptcha/api.js?onload=grecaptchaCallback&amp;render=explicit';
+        fjs.parentNode.insertBefore(js, fjs);
+      }(document, 'script', 'recaptcha-jssdk', this));
+
+    }
+
+    renderReCaptcha() {
+      window.grecaptcha.render(this.recaptchaElement.nativeElement, {
+        sitekey: '6Lf4I6gZAAAAAMp1E9YI1FJghdQ20CNRtAV9d55y',
+        callback: (response) => {
+            console.log('response', response);
+
+            this.isvalidCaptcha = true;
+
+            this.isErreurCaptcha = false;
+        }
+      });
+    }
+
+   get f() { return this.addNewsProjectForm.controls; }
+
+   imageNewsInputChange(imageInput: any) {
+
+      this.imageFileNews = imageInput.files[0];
+
+      this.addImageNewsProject();
+
+    }
+
+    addImageNewsProject(){
+
+      if (this.imageFileNews){
+
+         this.ngxService.start();
+
+         const infoObjectphotos = {
+                         title: 'image_affiche_',
+                         description:  'image_affiche_project'
+               };
+
+
+
+         this.imageService.uploadImage(this.imageFileNews, infoObjectphotos).then((imageData: any) => {
+
+         console.log(imageData.data.link);
+
+         this.ObjetNewsProject.photos = imageData.data.link;
+
+         this.srcImageNews  = imageData.data.link;
+
+         this.ngxService.stop();
+
+
+        });
+
+
+       }else{
+
+         this.tinyAlert('Veuillez telecharger une image svp');
+       }
+
+
+    }
+
+   onFormSubmitAddNewsProject(){
+
+      this.submitted = true;
+
+      if (this.addNewsProjectForm.invalid) {
+         return;
+      }
+
+      const date = new Date();
+
+      this.ObjetNewsProject.date_created = date.toLocaleString('fr-FR', {
+                                                                              weekday: 'long',
+                                                                              year: 'numeric',
+                                                                              month: 'long',
+                                                                              day: 'numeric',
+                                                                              hour: 'numeric',
+                                                                              minute: 'numeric',
+                                                                              second: 'numeric',
+     });
+
+      this.ObjetNewsProject.timestamp = Date.now();
+
+      this.ObjetNewsProject._project = this.ObjetProjectTemplate.project;
+
+      this.ngxService.start();
+
+      this.apiService.addNewsProjectByUser(this.ObjetNewsProject).subscribe((dataNews: NewsProjectModel) => {
+
+
+         this.getListNewsProject();
+
+
+         this.ngxService.stop();
+
+      }, (error: any) => {
+
+        this.ngxService.stop();
+      });
+
+
+   }
+
+   getListNewsProject(){
+
+
+      this.listNewsProject = [];
+
+      this.apiService.getListNewsProjectByUser(this.ObjetProjectTemplate.project).subscribe((arrayNewsProject: Array<NewsProjectModel>) => {
+
+
+         this.listNewsProject = arrayNewsProject;
+
+         // tslint:disable-next-line:prefer-for-of
+         for (let index = 0; index < this.listNewsProject.length; index++) {
+
+            this.listNewsProject[index].description = this.listNewsProject[index].description.substr(3);
+
+            // tslint:disable-next-line:max-line-length
+            this.listNewsProject[index].description = this.listNewsProject[index].description.substr(0, this.listNewsProject[index].description.length - 4);
+
+
+         }
+
+         this.listNewsProject = this.listNewsProject.sort((c1, c2) => c2.timestamp - c1.timestamp);
+
+
+      }, (error: any) => { });
+
+   }
 
    getinfosProject(tokenProject) {
 
@@ -144,6 +410,43 @@ export class MyProjectShowCompanyOwnerComponent implements OnInit {
          console.log('dataPorject = ', dataPorject);
 
          this.ObjetProjectTemplate.project = dataPorject;
+
+         this.ObjetProject = dataPorject;
+
+         const dateCurrent = new Date();
+
+         const dateProject = new Date(dataPorject.created_at);
+
+
+
+         if (this.ObjetProjectTemplate.project.description.indexOf('<p>') >= 0){
+
+            this.ObjetProjectTemplate.project.description = this.ObjetProjectTemplate.project.description.substr(3);
+
+         }
+
+         if (this.ObjetProjectTemplate.project.description.indexOf('</p>') >= 0){
+
+            // tslint:disable-next-line:max-line-length
+            this.ObjetProjectTemplate.project.description = this.ObjetProjectTemplate.project.description.substring(0, this.ObjetProjectTemplate.project.description.length - 4 );
+        }
+
+
+
+         // alert('anneProject' + dateProject.getFullYear());
+
+         // alert('anne-en-cours' + dateCurrent.getFullYear());
+
+
+         for (let index = 0; index <= dateCurrent.getFullYear() - dateProject.getFullYear(); index++) {
+
+            // alert(dateProject.getFullYear() + index);
+
+            this.listYearProject.push(dateProject.getFullYear() + index);
+
+         }
+
+
 
          if (dataPorject.manager_project) {
 
@@ -163,6 +466,16 @@ export class MyProjectShowCompanyOwnerComponent implements OnInit {
          this.getListInvestorByProject();
 
          this.getAllFondsInvest();
+
+         this.getStatustiquesHeartsChart();
+
+         this.getStatustiquesVuesChart();
+
+         this.getStatustiquesLikesChart();
+
+         this.getStatustiquesDislikesChart();
+
+         this.getListNewsProject();
 
          /******************************************** */
 
@@ -197,6 +510,281 @@ export class MyProjectShowCompanyOwnerComponent implements OnInit {
          this.ngxService.stop();
       });
 
+
+   }
+
+   onSelectMonthStatisMonth(value){
+
+
+
+      console.log('this.ObjetOptionStatDays.month =', this.ObjetOptionStatMonth.month);
+
+      console.log('this.ObjetOptionStatDays.year =', this.ObjetOptionStatMonth.year);
+
+
+
+      this.getStatustiquesHeartsDaysChart();
+
+      this.getStatustiquesVueDaysChart();
+
+      this.getStatustiquesLikeDaysChart();
+
+      this.getStatustiquesDislikeDaysChart();
+
+      this.isShowChartsDays = true;
+
+
+
+   }
+
+   onChangeTypeStatistique(value){
+
+
+       // console.log('value = ', value);
+
+       if (value === 'month'){
+
+           this.isShowChartsDays = false;
+
+           this.isShowChartsMens = true;
+
+           this.isShowFormSelectDays = false;
+
+       }
+
+       if (value === 'day'){
+
+         this.isShowChartsDays = false;
+
+         this.isShowFormSelectDays = true;
+
+         this.isShowChartsMens = false;
+
+      }
+
+   }
+
+   getStatustiquesLikeDaysChart(){
+
+      this.barChartDataDaysLikes[0].data = [];
+
+      this.barChartLabelsDaysLikes = [];
+
+      // tslint:disable-next-line:max-line-length
+      this.apiService.getStatistiquesLikeMonthChartsByUser(this.ObjetOptionStatMonth, this.ObjetProjectTemplate.project, this.infosUser).subscribe((dataArrayLike: Array<StatistiquesChartsLikeModel>) => {
+
+         dataArrayLike.forEach(element => {
+
+            console.log(element);
+
+            /*********************************************** */
+
+            this.barChartDataDaysLikes[0].data.push(element.nbrLikes);
+
+            this.barChartLabelsDaysLikes.push(element.day);
+
+
+     });
+
+
+      }, (error: any) => {    });
+
+
+
+}
+
+
+getStatustiquesDislikeDaysChart(){
+
+   this.barChartDataDaysDislikes[0].data = [];
+
+   this.barChartLabelsDaysDislikes = [];
+
+   // tslint:disable-next-line:max-line-length
+   this.apiService.getStatistiquesDislikeMonthChartsByUser(this.ObjetOptionStatMonth, this.ObjetProjectTemplate.project, this.infosUser).subscribe((dataArrayDislike: Array<StatistiquesChartsDislikesModel>) => {
+
+      dataArrayDislike.forEach(element => {
+
+         console.log(element);
+
+         /*********************************************** */
+
+         this.barChartDataDaysDislikes[0].data.push(element.nbrDislikes);
+
+         this.barChartLabelsDaysDislikes.push(element.day);
+
+
+  });
+
+
+   }, (error: any) => {    });
+
+
+
+}
+
+
+   getStatustiquesVueDaysChart(){
+
+      this.barChartDataDaysVues[0].data = [];
+
+      this.barChartLabelsDaysVues = [];
+
+         // tslint:disable-next-line:max-line-length
+      this.apiService.getStatistiquesVuesMonthChartsByUser(this.ObjetOptionStatMonth, this.ObjetProjectTemplate.project, this.infosUser).subscribe((dataArrayVue: Array<StatistiquesChartsVueModel>) => {
+
+            dataArrayVue.forEach(element => {
+
+               console.log(element);
+
+               /*********************************************** */
+
+               this.barChartDataDaysVues[0].data.push(element.nbrVues);
+
+               this.barChartLabelsDaysVues.push(element.day);
+
+
+        });
+
+
+         }, (error: any) => {    });
+
+
+
+   }
+
+   getStatustiquesHeartsDaysChart(){
+
+      this.barChartDataDaysHearts[0].data = [];
+
+      this.barChartLabelsDaysHearts = [];
+
+
+      // tslint:disable-next-line:max-line-length
+      this.apiService.getStatistiquesHeartsMonthChartsByUser(this.ObjetOptionStatMonth, this.ObjetProjectTemplate.project, this.infosUser).subscribe((dataArrayHeart: Array<StatistiquesChartsHeartModel>) => {
+
+         dataArrayHeart.forEach(element => {
+
+            console.log(element);
+
+            /*********************************************** */
+
+            this.barChartDataDaysHearts[0].data.push(element.nbrHearts);
+
+            this.barChartLabelsDaysHearts.push(element.day);
+
+
+     });
+
+
+      }, (error: any) => {    });
+
+   }
+
+
+
+   getStatustiquesHeartsChart(){
+
+
+      // tslint:disable-next-line:max-line-length
+      this.apiService.getStatistiquesHeartsChartsByUser(this.ObjetProjectTemplate.project, this.infosUser).subscribe((dataArrayHeart: Array<StatistiquesChartsHeartModel>) => {
+
+         dataArrayHeart.forEach(element => {
+
+            console.log(element);
+
+            /*********************************************** */
+
+            this.barChartDataHearts[0].data.push(element.nbrHearts);
+
+            this.barChartLabelsHearts.push(element.month);
+
+
+     });
+
+
+      }, (error: any) => {    });
+
+   }
+
+   getStatustiquesVuesChart(){
+
+
+      // tslint:disable-next-line:max-line-length
+      this.apiService.getStatistiquesVuesChartsByUser(this.ObjetProjectTemplate.project, this.infosUser).subscribe((dataArrayVue: Array<StatistiquesChartsVueModel>) => {
+
+         dataArrayVue.forEach(element => {
+
+            console.log(element);
+
+            /*********************************************** */
+
+            this.barChartDataVues[0].data.push(element.nbrVues);
+
+            this.barChartLabelsVues.push(element.month);
+
+
+     });
+
+
+      }, (error: any) => {
+
+
+     });
+
+   }
+
+   getStatustiquesLikesChart(){
+
+
+      // tslint:disable-next-line:max-line-length
+      this.apiService.getStatistiquesLikesChartsByUser(this.ObjetProjectTemplate.project, this.infosUser).subscribe((dataArrayLike: Array<StatistiquesChartsLikeModel>) => {
+
+         dataArrayLike.forEach(element => {
+
+            console.log(element);
+
+            /*********************************************** */
+
+            this.barChartDataLikes[0].data.push(element.nbrLikes);
+
+            this.barChartLabelsLikes.push(element.month);
+
+
+     });
+
+
+      }, (error: any) => {
+
+
+     });
+
+   }
+
+   getStatustiquesDislikesChart(){
+
+
+      // tslint:disable-next-line:max-line-length
+      this.apiService.getStatistiquesDislikesChartsByUser(this.ObjetProjectTemplate.project, this.infosUser).subscribe((dataArrayDislikes: Array<StatistiquesChartsDislikesModel>) => {
+
+         dataArrayDislikes.forEach(element => {
+
+            console.log(element);
+
+            /*********************************************** */
+
+            this.barChartDataDislikes[0].data.push(element.nbrDislikes);
+
+            this.barChartLabelsDislikes.push(element.month);
+
+
+     });
+
+
+      }, (error: any) => {
+
+
+     });
 
    }
 
@@ -468,7 +1056,7 @@ export class MyProjectShowCompanyOwnerComponent implements OnInit {
 
       ObjectDemandeInvest.statutDemande = 'VALIDE';
 
-      this.apiService.acceptDemandeInvestorByProject(ObjectDemandeInvest).subscribe((dataConfirm: any) => {
+      this.apiService.acceptDemandeInvestorByProject(this.infosUser, ObjectDemandeInvest).subscribe((dataConfirm: any) => {
 
          console.log(dataConfirm);
 
@@ -499,7 +1087,7 @@ export class MyProjectShowCompanyOwnerComponent implements OnInit {
 
       });
 
-      this.apiService.declinDemandeInvestorByProject(ObjectDemandeInvest).subscribe((dataConfirm: any) => {
+      this.apiService.declinDemandeInvestorByProject(this.infosUser, ObjectDemandeInvest).subscribe((dataConfirm: any) => {
 
          console.log(dataConfirm);
 
@@ -535,13 +1123,13 @@ export class MyProjectShowCompanyOwnerComponent implements OnInit {
       /******************************************************** */
 
       /*  this.apiService.getPorteProjectById(this.ObjetProject.portes_projectId).subscribe((dataPorte: any) => {
-   
+
            // console.log(data);
-   
+
            this.ObjetProjectTemplate.portes_project = dataPorte.nom;
-   
+
         }, (error: any) => {
-   
+
         }); */
 
       /****************************************************** */
@@ -552,44 +1140,44 @@ export class MyProjectShowCompanyOwnerComponent implements OnInit {
       /******************************************************* */
 
       /*  this.apiService.getCategorieProject(this.ObjetProject.categorie_projectId).subscribe((dataCatgorie: any) => {
-   
+
            // console.log(data);
-   
+
            this.ObjetProjectTemplate.categorie_project = dataCatgorie.nom;
-   
+
         }, (error: any) => {
-   
+
         }); */
 
 
       /******************************************************* */
 
       /*  if (this.ObjetProject.statut_project === 0) {
-   
-   
+
+
            this.ObjetProjectTemplate.statut_project = 'Attente';
-   
+
         }
-   
+
         if (this.ObjetProject.statut_project === 1) {
-   
-   
+
+
            this.ObjetProjectTemplate.statut_project = 'Validé';
-   
+
         }
-   
+
         if (this.ObjetProject.statut_project === 2) {
-   
-   
+
+
            this.ObjetProjectTemplate.statut_project = 'Terminé';
-   
+
         }
-   
+
         if (this.ObjetProject.statut_project === 3) {
-   
-   
+
+
            this.ObjetProjectTemplate.statut_project = 'Annulé';
-   
+
         } */
 
       /******************************************************* */
@@ -620,7 +1208,7 @@ export class MyProjectShowCompanyOwnerComponent implements OnInit {
 
 
       // tslint:disable-next-line:max-line-length
-      this.apiService.createQuestionReponsesByUserForAdmin(this.objectQuestionRepProjectByUserForAdminModel).subscribe((dataQuestion: QuestionRepProjectByUserForAdminModel) => {
+      this.apiService.createQuestionReponsesByUserForAdmin(this.infosUser, this.objectQuestionRepProjectByUserForAdminModel).subscribe((dataQuestion: QuestionRepProjectByUserForAdminModel) => {
 
          console.log('createQuestionReponsesByUserForAdmin = ', dataQuestion);
 
@@ -663,7 +1251,7 @@ export class MyProjectShowCompanyOwnerComponent implements OnInit {
       this.objectQuestionRepProjectByUserForUserModel._userExp = this.infosUser;
 
       // tslint:disable-next-line:max-line-length
-      this.apiService.createQuestionReponsesByUserForUser(this.objectQuestionRepProjectByUserForUserModel).subscribe((dataQuestion: any) => {
+      this.apiService.createQuestionReponsesByUserForUser(this.infosUser, this.objectQuestionRepProjectByUserForUserModel).subscribe((dataQuestion: any) => {
 
          // console.log(dataQuestion);
 

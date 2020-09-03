@@ -1,11 +1,12 @@
 import { Component, OnInit, ElementRef, ViewChild, EventEmitter } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-
+import { Title } from '@angular/platform-browser';
 import { apiHttpSpringBootService } from './../api-spring-boot.service';
 import { CookieService } from 'ngx-cookie-service';
 import { DatePipe } from '@angular/common';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
 import {UserModel} from '../interfaces/models';
+
 
 // https://medium.com/letsboot/lets-pick-a-date-with-ng2-datepicker-1ba2d9593a66
 
@@ -34,41 +35,11 @@ export class IdentificationComponent implements OnInit {
     passwordLogin: ''
   };
 
-  /*public ObjetInscription = {
-    id: '',
-    nomInscription: '',
-    prenomInscription: '',
-    emailInscription: '',
-    passwordInscription: '',
-    sex: '',
-    photoUser: '',
-    date_naissance: '',
-    date_created: '',
-    date_update: '',
-    token: '',
-    typeCompte: 'user',
-    pseudo_name : ''
-  }; */
+
 
   public infosUser: UserModel = new UserModel();
 
   public ObjetInscription: UserModel = new UserModel();
-
- /* public infosUser = {
-    id: '',
-    nom: '',
-    prenom: '',
-    login: '',
-    password: '',
-    sex: '',
-    photoUser: '',
-    date_naissance: '',
-    date_created: '',
-    date_update: '',
-    token: '',
-    typeCompte: 'user',
-    pseudo_name: ''
-  }; */
 
   public isErreurLogin = false;
 
@@ -87,8 +58,10 @@ export class IdentificationComponent implements OnInit {
 
 
   constructor(private route: ActivatedRoute, private router: Router, private apiService: apiHttpSpringBootService,
-              private cookie: CookieService, private datePipe: DatePipe, private ngxService: NgxUiLoaderService) {
+              private cookie: CookieService, private datePipe: DatePipe, private ngxService: NgxUiLoaderService,
+              private titleService: Title) {
 
+    this.titleService.setTitle('Identification-inscription');
 
     this.route.params.subscribe(params => {
 
@@ -140,7 +113,7 @@ export class IdentificationComponent implements OnInit {
 
       this.isErreurInscription = false;
 
-      console.log(this.datePipe.transform(event, 'yyyy-MM-dd'));
+      // console.log(this.datePipe.transform(event, 'yyyy-MM-dd'));
 
       this.ObjetInscription.date_naissance = this.datePipe.transform(event, 'yyyy-MM-dd');
 
@@ -155,7 +128,7 @@ export class IdentificationComponent implements OnInit {
       this.renderReCaptcha();
     };
 
-    (function(d, s, id, obj) {
+    (function(d, s, id, obj) {      
       let js, fjs = d.getElementsByTagName(s)[0];
       if (d.getElementById(id)) { obj.renderReCaptcha(); return; }
       js = d.createElement(s); js.id = id;
@@ -167,10 +140,9 @@ export class IdentificationComponent implements OnInit {
 
   renderReCaptcha() {
     window.grecaptcha.render(this.recaptchaElement.nativeElement, {
-      //clé public
       sitekey: '6Lf4I6gZAAAAAMp1E9YI1FJghdQ20CNRtAV9d55y',
       callback: (response) => {
-        console.log('response', response);
+        // console.log('response', response);
 
         this.isvalidCaptcha = true;
 
@@ -190,15 +162,13 @@ export class IdentificationComponent implements OnInit {
 
     this.apiService.identificationUser(this.ObjetLogin).subscribe((dataUser: UserModel) => {
 
-      console.log('IdentificationComponent/identification', dataUser);
+      // console.log('IdentificationComponent/identification', dataUser);
 
       if (!dataUser) {
 
         this.isErreurLogin = true;
 
       } else {
-
-        console.log('toto2');
 
         this.infosUser = dataUser;
 
@@ -213,9 +183,7 @@ export class IdentificationComponent implements OnInit {
       this.ngxService.stop();
 
 
-    }, (error: any) => {
-
-    });
+    }, (error: any) => { });
 
   }
 
@@ -239,13 +207,13 @@ export class IdentificationComponent implements OnInit {
     }
 
 
-    if (this.isvalidCaptcha && !this.isErreurInscription) { 
+    if (this.isvalidCaptcha && !this.isErreurInscription) {
 
     this.ngxService.start();
 
     this.apiService.inscriptionUser(this.ObjetInscription).subscribe((dataUser: UserModel) => {
 
-        console.log('inscriptionUser', dataUser);
+        // console.log('inscriptionUser', dataUser);
 
         if (!dataUser) {
 
@@ -280,9 +248,9 @@ export class IdentificationComponent implements OnInit {
 
   Logout(){
 
-    this.cookie.deleteAll();
+     // this.cookie.deleteAll();
 
-    // this.cookie.delete('infosUser'); // supression-cookie
+    this.cookie.delete('infosUser'); // supression-cookie
 
 
   }

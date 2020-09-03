@@ -20,7 +20,20 @@
           <li class="nav-item">
             <a class="nav-link" routerLink="/page-contact" routerLinkActive="active">Nous contacter</a>
           </li>
+          <li class="nav-item">
+
+            <span class="form-inline">
+              <select    class="form-control"    #selectedLang        (change)="switchLang(selectedLang.value)">
+                <option *ngFor="let language of translate.getLangs()"  [value]="language"     [selected]="language === translate.currentLang">
+                  {{ language }}
+                </option>
+              </select>
+            </span>
+
+          </li>
         </ul>
       </div>
     </div>
   </nav>
+
+  

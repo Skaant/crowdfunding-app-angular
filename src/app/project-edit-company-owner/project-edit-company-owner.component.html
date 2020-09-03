@@ -129,8 +129,10 @@
                         <div class="card mb-4 py-3 border-left-primary">
                           <div class="card-body">
                             <div class="form-group">
+
+                              <div [froalaEditor]="options" [(froalaModel)]="ObjetProject.description"  formControlName="descriptionProject"  [ngClass]="{ 'is-invalid': submitted && f.descriptionProject.errors }"></div>
         
-                              <textarea rows="5" cols="33" class="form-control" [(ngModel)] = "ObjetProject.description" formControlName="descriptionProject" placeholder="Décrivez brièvement votre projet *" [ngClass]="{ 'is-invalid': submitted && f.descriptionProject.errors }"></textarea>
+                            <!--  <textarea rows="5" cols="33" class="form-control" [(ngModel)] = "ObjetProject.description" formControlName="descriptionProject" placeholder="Décrivez brièvement votre projet *" [ngClass]="{ 'is-invalid': submitted && f.descriptionProject.errors }"></textarea>-->
                              
                                <div *ngIf="submitted && f.descriptionProject.errors" class="invalid-feedback">
                                   <div *ngIf="f.descriptionProject.errors.required" >Le champ description est important !!!</div>
@@ -564,7 +566,7 @@
 
                   <!---------------------------------------------------------------->
 
-                  <div  *ngIf="arrayAdressReseauxSociauxProject.length">
+                  <div  *ngIf="arrayAdressReseauxSociauxProject.length>0">
 
                     <div class="row" style="margin-top:5%;margin-left:5%;"     *ngFor="let objectAdresse of arrayAdressReseauxSociauxProject; let i = index ">
 

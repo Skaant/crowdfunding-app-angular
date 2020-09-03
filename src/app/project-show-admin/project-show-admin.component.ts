@@ -9,10 +9,14 @@ import {
   UserModel, ProjectModel, templteProjectModel, ImageProjectModel
   , AdressReseauxSociauxProjectModel, commentProjectModel, StatutProjectModel,
   QuestionRepProjectByAdminForUserModel, QuestionRepProjectByUserForAdminModel,
-  QuestionRepProjectByUserForUserModel, InvestiteurProjectModel, fondInvestor
+  // tslint:disable-next-line:max-line-length
+  QuestionRepProjectByUserForUserModel, InvestiteurProjectModel, fondInvestor, StatistiquesChartsLikeModel, StatistiquesChartsDislikesModel,
+  StatistiquesChartsHeartModel, StatistiquesChartsVueModel, NewsProjectModel, CommissionProjectModel
 } from '../interfaces/models';
 
-
+import { ChartOptions, ChartType, ChartDataSets } from 'chart.js';
+import { Color, Label, MultiDataSet } from 'ng2-charts';
+import { Title } from '@angular/platform-browser';
 
 
 
@@ -86,10 +90,88 @@ export class ProjectShowAdminComponent implements OnInit {
 
   public listFonsInvest: Array<fondInvestor> = [];
 
+     /*************************************************************** */
+
+   barChartOptions: ChartOptions = {
+      responsive: true,
+     };
+   barChartType: ChartType = 'bar';
+   barChartLegend = true;
+   barChartPlugins = [];
+
+   barChartLabelsHearts: Label[] = [];
+   barChartDataHearts: ChartDataSets[] = [  { data: [], label: 'Nombre de coup de coeur ' } ];
+
+   barChartLabelsVues: Label[] = [];
+   barChartDataVues: ChartDataSets[] = [  { data: [], label: 'Nombre de vue de coeur ' } ];
+
+   barChartLabelsLikes: Label[] = [];
+   barChartDataLikes: ChartDataSets[] = [  { data: [], label: 'Nombre de likes de coeur ' } ];
+
+   barChartLabelsDislikes: Label[] = [];
+   barChartDataDislikes: ChartDataSets[] = [  { data: [], label: 'Nombre de dsilikes de coeur ' } ];
+
+/********************************************************************* */
+
+/********************************************************************* */
+
+barChartLabelsDaysHearts: Label[] = [];
+barChartDataDaysHearts: ChartDataSets[] = [  { data: [], label: 'Nombre de coup de coeur ' } ];
+
+barChartLabelsDaysVues: Label[] = [];
+barChartDataDaysVues: ChartDataSets[] = [  { data: [], label: 'Nombre de vue  ' } ];
+
+barChartLabelsDaysLikes: Label[] = [];
+barChartDataDaysLikes: ChartDataSets[] = [  { data: [], label: 'Nombre de likes  ' } ];
+
+barChartLabelsDaysDislikes: Label[] = [];
+barChartDataDaysDislikes: ChartDataSets[] = [  { data: [], label: 'Nombre de dsilikes  ' } ];
+
+
+/********************************************************************* */
+
+public isShowChartsMens = true;
+
+public isShowChartsDays = false;
+
+public isShowFormSelectDays = false;
+
+public datePickerConfig = {
+                    drops: 'down',
+                    format: 'YYYY',
+                    monthFormat: 'YYYY',
+                    locale: 'fr',
+                    addClass: 'form-control'
+ };
+
+ public datePickerConfigBis = {
+   drops: 'down',
+   format: 'MM',
+   monthFormat: 'MM',
+   locale: 'fr',
+   addClass: 'form-control'
+ };
+
+public ObjetOptionStatMonth: { year: string , month: string} = {year : '', month : ''};
+
+public listYearProject = [];
+
+public listNewsProject: Array<NewsProjectModel> = [];
+
+
+/********************************************************************* */
+
+public montantCommision = 0;
+
+public showActionCommision = false;
+
+public objectCommissionProject: CommissionProjectModel = new CommissionProjectModel();
 
   constructor(private router: Router, private route: ActivatedRoute, private cookie: CookieService,
               private apiService: apiHttpSpringBootService, private ngxService: NgxUiLoaderService,
-              private datePipe: DatePipe, public sanitizer: DomSanitizer) {
+              private datePipe: DatePipe, public sanitizer: DomSanitizer, private titleService: Title) {
+
+
 
     if (this.cookie.get('infosUser')) {
 
@@ -151,6 +233,34 @@ export class ProjectShowAdminComponent implements OnInit {
 
   ngOnInit(): void { }
 
+  getListNewsProject(){
+
+
+    this.listNewsProject = [];
+
+    this.apiService.getListNewsProjectByUser(this.ObjetProjectTemplate.project).subscribe((arrayNewsProject: Array<NewsProjectModel>) => {
+
+
+       this.listNewsProject = arrayNewsProject;
+
+       // tslint:disable-next-line:prefer-for-of
+       for (let index = 0; index < this.listNewsProject.length; index++) {
+
+          this.listNewsProject[index].description = this.listNewsProject[index].description.substr(3);
+
+          // tslint:disable-next-line:max-line-length
+          this.listNewsProject[index].description = this.listNewsProject[index].description.substr(0, this.listNewsProject[index].description.length - 4);
+
+
+       }
+
+       this.listNewsProject = this.listNewsProject.sort((c1, c2) => c2.timestamp - c1.timestamp);
+
+
+    }, (error: any) => { });
+
+ }
+
   getinfosProject(tokenProject) {
 
 
@@ -158,9 +268,35 @@ export class ProjectShowAdminComponent implements OnInit {
 
     this.apiService.getDataProject(tokenProject).subscribe((dataPorject: ProjectModel) => {
 
-      console.log('dataPorject = ', dataPorject);
+      // console.log('dataPorject = ', dataPorject);
 
       this.ObjetProjectTemplate.project = dataPorject;
+
+      this.titleService.setTitle('Fiche-projet [' + this.ObjetProjectTemplate.project.nom + ']');
+
+      const dateCurrent = new Date();
+
+      const dateProject = new Date(dataPorject.created_at);
+
+      for (let index = 0; index <= dateCurrent.getFullYear() - dateProject.getFullYear(); index++) {
+
+        // alert(dateProject.getFullYear() + index);
+
+        this.listYearProject.push(dateProject.getFullYear() + index);
+
+     }
+
+      if (this.ObjetProjectTemplate.project.description.indexOf('<p>') >= 0){
+
+      this.ObjetProjectTemplate.project.description = this.ObjetProjectTemplate.project.description.substr(3);
+
+      }
+
+      if (this.ObjetProjectTemplate.project.description.indexOf('</p>') >= 0){
+
+      // tslint:disable-next-line:max-line-length
+      this.ObjetProjectTemplate.project.description = this.ObjetProjectTemplate.project.description.substring(0, this.ObjetProjectTemplate.project.description.length - 4 );
+      }
 
       this.getListArrayAdressReseauxSociauxProject();
 
@@ -175,6 +311,20 @@ export class ProjectShowAdminComponent implements OnInit {
       this.getListInvestorByProject();
 
       this.getAllFondsInvest();
+
+      this.getStatustiquesHeartsChart();
+
+      this.getStatustiquesVuesChart();
+
+      this.getStatustiquesLikesChart();
+
+      this.getStatustiquesDislikesChart();
+
+      this.getListNewsProject();
+
+      this.checkCommisionProject();
+
+      this.montantCommision = dataPorject.total_fonds * 0.05;
 
       /******************************************************** */
 
@@ -191,17 +341,17 @@ export class ProjectShowAdminComponent implements OnInit {
 
       this.getListCommentsProject();
 
-      this.pollingComment = setInterval(() => {
+   /*   this.pollingComment = setInterval(() => {
 
         this.getListCommentsProject();
 
-      }, 10 * 1000);
+      }, 10 * 1000); */
 
       /**************************************************** */
 
       this.getListQuestionsAides();
 
-      this.polling = setInterval(() => {
+  /*    this.polling = setInterval(() => {
 
         this.getListQuestionsAides();
 
@@ -211,7 +361,7 @@ export class ProjectShowAdminComponent implements OnInit {
 
         this.getAllFondsInvest();
 
-      }, 10 * 1000);
+      }, 10 * 1000); */
 
 
       /******************************************************** */
@@ -226,6 +376,355 @@ export class ProjectShowAdminComponent implements OnInit {
 
 
   }
+
+  checkCommisionProject(){
+
+
+  // this.ObjetProjectTemplate.project._statut_project.id ===  5 = etat project termine
+
+    // tslint:disable-next-line:max-line-length
+    this.apiService.checkCommissionProjectByAdmin(this.infosUser, this.ObjetProjectTemplate.project ).subscribe((dataArrayCommission: Array<CommissionProjectModel>) => {
+
+      console.log('checkCommisionProject-id-statutProject = ', this.ObjetProjectTemplate.project._statut_project.id);
+
+      if (dataArrayCommission.length <= 0 && this.ObjetProjectTemplate.project._statut_project.id ===  5){
+
+
+          this.showActionCommision = true;
+
+      }
+
+
+   }, (error: any) => {
+
+    if (this.ObjetProjectTemplate.project._statut_project.id ===  5){
+
+      this.showActionCommision = true;
+    }
+
+     });
+
+  }
+
+  addCommisionProject(){
+
+
+    const date = new Date();
+
+    this.objectCommissionProject.date_created = date.toLocaleString('fr-FR', {
+                                                                             weekday: 'long',
+                                                                             year: 'numeric',
+                                                                             month: 'long',
+                                                                             day: 'numeric',
+                                                                             hour: 'numeric',
+                                                                             minute: 'numeric',
+                                                                             second: 'numeric',
+
+    });
+
+    this.objectCommissionProject.amount = this.montantCommision;
+
+    this.objectCommissionProject.timestamp = Date.now();
+
+    this.objectCommissionProject._project = this.ObjetProjectTemplate.project;
+
+    this.objectCommissionProject.manager_project = this.infosUser;
+
+    // tslint:disable-next-line:max-line-length
+    this.apiService.addCommissionProjectByAdmin(this.infosUser, this.ObjetProjectTemplate.project, this.objectCommissionProject ).subscribe((dataArrayCommission: Array<CommissionProjectModel>) => {
+
+      if (dataArrayCommission.length <= 0){
+
+
+          this.showActionCommision = true;
+
+      }
+
+
+   }, (error: any) => {    });
+
+
+
+
+  }
+
+  onSelectMonthStatisMonth(value){
+
+
+
+    console.log('this.ObjetOptionStatDays.month =', this.ObjetOptionStatMonth.month);
+
+    console.log('this.ObjetOptionStatDays.year =', this.ObjetOptionStatMonth.year);
+
+
+
+    this.getStatustiquesHeartsDaysChart();
+
+    this.getStatustiquesVueDaysChart();
+
+    this.getStatustiquesLikeDaysChart();
+
+    this.getStatustiquesDislikeDaysChart();
+
+    this.isShowChartsDays = true;
+
+
+
+ }
+
+ onChangeTypeStatistique(value){
+
+
+     // console.log('value = ', value);
+
+     if (value === 'month'){
+
+         this.isShowChartsDays = false;
+
+         this.isShowChartsMens = true;
+
+         this.isShowFormSelectDays = false;
+
+     }
+
+     if (value === 'day'){
+
+       this.isShowChartsDays = false;
+
+       this.isShowFormSelectDays = true;
+
+       this.isShowChartsMens = false;
+
+    }
+
+ }
+
+ getStatustiquesLikeDaysChart(){
+
+    this.barChartDataDaysLikes[0].data = [];
+
+    this.barChartLabelsDaysLikes = [];
+
+    // tslint:disable-next-line:max-line-length
+    this.apiService.getStatistiquesLikeMonthChartsByUser(this.ObjetOptionStatMonth, this.ObjetProjectTemplate.project, this.infosUser).subscribe((dataArrayLike: Array<StatistiquesChartsLikeModel>) => {
+
+       dataArrayLike.forEach(element => {
+
+          console.log(element);
+
+          /*********************************************** */
+
+          this.barChartDataDaysLikes[0].data.push(element.nbrLikes);
+
+          this.barChartLabelsDaysLikes.push(element.day);
+
+
+   });
+
+
+    }, (error: any) => {    });
+
+
+
+}
+
+
+getStatustiquesDislikeDaysChart(){
+
+ this.barChartDataDaysDislikes[0].data = [];
+
+ this.barChartLabelsDaysDislikes = [];
+
+ // tslint:disable-next-line:max-line-length
+ this.apiService.getStatistiquesDislikeMonthChartsByUser(this.ObjetOptionStatMonth, this.ObjetProjectTemplate.project, this.infosUser).subscribe((dataArrayDislike: Array<StatistiquesChartsDislikesModel>) => {
+
+    dataArrayDislike.forEach(element => {
+
+       console.log(element);
+
+       /*********************************************** */
+
+       this.barChartDataDaysDislikes[0].data.push(element.nbrDislikes);
+
+       this.barChartLabelsDaysDislikes.push(element.day);
+
+
+});
+
+
+ }, (error: any) => {    });
+
+
+
+}
+
+
+ getStatustiquesVueDaysChart(){
+
+    this.barChartDataDaysVues[0].data = [];
+
+    this.barChartLabelsDaysVues = [];
+
+       // tslint:disable-next-line:max-line-length
+    this.apiService.getStatistiquesVuesMonthChartsByUser(this.ObjetOptionStatMonth, this.ObjetProjectTemplate.project, this.infosUser).subscribe((dataArrayVue: Array<StatistiquesChartsVueModel>) => {
+
+          dataArrayVue.forEach(element => {
+
+             console.log(element);
+
+             /*********************************************** */
+
+             this.barChartDataDaysVues[0].data.push(element.nbrVues);
+
+             this.barChartLabelsDaysVues.push(element.day);
+
+
+      });
+
+
+       }, (error: any) => {    });
+
+
+
+ }
+
+ getStatustiquesHeartsDaysChart(){
+
+    this.barChartDataDaysHearts[0].data = [];
+
+    this.barChartLabelsDaysHearts = [];
+
+
+    // tslint:disable-next-line:max-line-length
+    this.apiService.getStatistiquesHeartsMonthChartsByUser(this.ObjetOptionStatMonth, this.ObjetProjectTemplate.project, this.infosUser).subscribe((dataArrayHeart: Array<StatistiquesChartsHeartModel>) => {
+
+       dataArrayHeart.forEach(element => {
+
+          console.log(element);
+
+          /*********************************************** */
+
+          this.barChartDataDaysHearts[0].data.push(element.nbrHearts);
+
+          this.barChartLabelsDaysHearts.push(element.day);
+
+
+   });
+
+
+    }, (error: any) => {    });
+
+ }
+
+
+  getStatustiquesHeartsChart(){
+
+
+    // tslint:disable-next-line:max-line-length
+    this.apiService.getStatistiquesHeartsChartsByUser(this.ObjetProjectTemplate.project, this.infosUser).subscribe((dataArrayHeart: Array<StatistiquesChartsHeartModel>) => {
+
+       dataArrayHeart.forEach(element => {
+
+          console.log(element);
+
+          /*********************************************** */
+
+          this.barChartDataHearts[0].data.push(element.nbrHearts);
+
+          this.barChartLabelsHearts.push(element.month);
+
+
+   });
+
+
+    }, (error: any) => {
+
+
+   });
+
+ }
+
+ getStatustiquesVuesChart(){
+
+
+    // tslint:disable-next-line:max-line-length
+    this.apiService.getStatistiquesVuesChartsByUser(this.ObjetProjectTemplate.project, this.infosUser).subscribe((dataArrayVue: Array<StatistiquesChartsVueModel>) => {
+
+       dataArrayVue.forEach(element => {
+
+          console.log(element);
+
+          /*********************************************** */
+
+          this.barChartDataVues[0].data.push(element.nbrVues);
+
+          this.barChartLabelsVues.push(element.month);
+
+
+   });
+
+
+    }, (error: any) => {
+
+
+   });
+
+ }
+
+ getStatustiquesLikesChart(){
+
+
+    // tslint:disable-next-line:max-line-length
+    this.apiService.getStatistiquesLikesChartsByUser(this.ObjetProjectTemplate.project, this.infosUser).subscribe((dataArrayLike: Array<StatistiquesChartsLikeModel>) => {
+
+       dataArrayLike.forEach(element => {
+
+          console.log(element);
+
+          /*********************************************** */
+
+          this.barChartDataLikes[0].data.push(element.nbrLikes);
+
+          this.barChartLabelsLikes.push(element.month);
+
+
+   });
+
+
+    }, (error: any) => {
+
+
+   });
+
+ }
+
+ getStatustiquesDislikesChart(){
+
+
+    // tslint:disable-next-line:max-line-length
+    this.apiService.getStatistiquesDislikesChartsByUser(this.ObjetProjectTemplate.project, this.infosUser).subscribe((dataArrayDislikes: Array<StatistiquesChartsDislikesModel>) => {
+
+       dataArrayDislikes.forEach(element => {
+
+          console.log(element);
+
+          /*********************************************** */
+
+          this.barChartDataDislikes[0].data.push(element.nbrDislikes);
+
+          this.barChartLabelsDislikes.push(element.month);
+
+
+   });
+
+
+    }, (error: any) => {
+
+
+   });
+
+ }
+
 
   getListQuestionsAidesForInvestor() {
 
@@ -618,7 +1117,7 @@ export class ProjectShowAdminComponent implements OnInit {
 
 
     // tslint:disable-next-line:max-line-length
-    this.apiService.createQuestionReponsesByAdminForUser(this.objectQuestionsAidesByAdminForUser).subscribe((dataQuestion: QuestionRepProjectByAdminForUserModel) => {
+    this.apiService.createQuestionReponsesByAdminForUser(this.infosUser, this.objectQuestionsAidesByAdminForUser).subscribe((dataQuestion: QuestionRepProjectByAdminForUserModel) => {
 
       console.log('createQuestionReponsesByAdminForUser = ', dataQuestion);
 
@@ -638,7 +1137,7 @@ export class ProjectShowAdminComponent implements OnInit {
     // recuperer la liste des questions envoye par l'admin (id-admin ='1' ) pour le compagny owner
 
     // tslint:disable-next-line:max-line-length
-    this.apiService.getListQuestionReponsesByAdminForUser(this.ObjetProjectTemplate.project).subscribe((arrayQuestionByAdminForUser: Array<QuestionRepProjectByAdminForUserModel>) => {
+    this.apiService.getListQuestionReponsesByAdminForUser( this.ObjetProjectTemplate.project).subscribe((arrayQuestionByAdminForUser: Array<QuestionRepProjectByAdminForUserModel>) => {
 
       console.log('arrayQuestionByAdminForUser', arrayQuestionByAdminForUser);
 

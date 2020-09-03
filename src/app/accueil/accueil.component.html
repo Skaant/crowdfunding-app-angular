@@ -16,7 +16,7 @@
   
       <!-- Jumbotron Header -->
       <header class="jumbotron my-4">
-        <h1 class="display-3">A Warm Welcome!</h1>
+        <h1 class="display-3">{{'accueil_h1' | translate}}</h1>
         <p class="lead">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsa, ipsam, eligendi, in quo sunt possimus non incidunt odit vero aliquid similique quaerat nam nobis illo aspernatur vitae fugiat numquam repellat.</p>
         <a href="#" class="btn btn-primary btn-lg">Call to action!</a>
       </header>
@@ -35,8 +35,42 @@
                         <h5 class="card-title"  *ngIf="project._statut_project.nom === 'Validé'">{{listtemplateProjects[i].nbrJours}}</h5>
                         <h5 class="card-title">{{listtemplateProjects[i].dateLimiteCollecteFormate}}</h5>                       
                         <h5 class="card-title">{{project.categoryProject.nom}}</h5>
-                        <h5 class="card-title" *ngIf="project.total_hearts>0"><img class="card-img-top" src="./assets/img/heart-icon.png"  alt="" style="width :35px;height:35px;text-align: center;" >{{project.total_hearts}}</h5>
-                        <img class="card-img-top" src="./assets/img/picto-dons-300x300.png" alt="" style="width :30px;height:30px;" ><span  style="font-weight: bold;">{{project.total_fonds}}&euro;</span>
+                        <table  style="margin-left: 30%;">
+
+                          <tr>
+
+                            <td width="10%">                                
+
+                              <img class="card-img-top" src="./assets/img/heart-icon.png"  alt="" style="width :35px;height:35px;" >
+
+                              <span>{{project.total_hearts}}</span>
+
+                            </td>
+
+                            <td width="40%"  style="text-align: center;">                                
+
+                              <img class="card-img-top" src="./assets/img/like_ico.png"  alt="" style="width :35px;height:35px;" >
+
+                              <span>{{project.total_like}}</span>
+                              
+                            </td>
+
+                            <td width="20%">                                     
+
+                              <img class="card-img-top" src="./assets/img/dislike_ico.png"  alt="" style="width :35px;height:35px;" >
+
+                              <span>{{project.total_dislike}}</span>
+                              
+                            </td>
+
+                            <td width="20%">                                     
+
+                              <img class="card-img-top" src="./assets/img/picto-dons-300x300.png" alt="" style="width :30px;height:30px;" ><span  style="font-weight: bold;">{{project.total_fonds}}&euro;</span>
+                              
+                            </td>
+
+                          </tr>
+                        </table>
               <p class="card-text">{{project.description}}</p>
             </div>
             <div class="card-footer">

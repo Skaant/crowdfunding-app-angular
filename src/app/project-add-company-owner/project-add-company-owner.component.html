@@ -74,7 +74,11 @@
                   <div class="card-body">
                     <div class="form-group">
 
-                      <textarea rows="5" cols="33" class="form-control" [(ngModel)] = "ObjetProject.description" formControlName="descriptionProject" placeholder="Décrivez brièvement votre projet *" [ngClass]="{ 'is-invalid': submitted && f.descriptionProject.errors }"></textarea>
+                      
+
+                     <div [froalaEditor]="options" [(froalaModel)]="ObjetProject.description"  formControlName="descriptionProject"  [ngClass]="{ 'is-invalid': submitted && f.descriptionProject.errors }"></div>
+
+                     <!-- <textarea rows="5" cols="33" class="form-control" [(ngModel)] = "ObjetProject.description" formControlName="descriptionProject" placeholder="Décrivez brièvement votre projet *" [ngClass]="{ 'is-invalid': submitted && f.descriptionProject.errors }"></textarea>-->
                      
                        <div *ngIf="submitted && f.descriptionProject.errors" class="invalid-feedback">
                           <div *ngIf="f.descriptionProject.errors.required" >Le champ description est important !!!</div>
@@ -291,7 +295,7 @@
 
                             <div class="col-lg-4 mb-4"   style="margin-left:10%;margin-top:10%">
 
-                              <img mat-card-image [src]="ObjetProject.afficheProject" alt="" style="margin-left:5%" > 
+                              <img mat-card-image [src]="srcImageAfficheProject" alt="" style="margin-left:5%" > 
 
                             </div>
 

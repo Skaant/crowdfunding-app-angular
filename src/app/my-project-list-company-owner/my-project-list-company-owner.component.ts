@@ -47,7 +47,7 @@ export class MyProjectListCompanyOwnerComponent implements OnInit {
 
         }
 
-      } 
+      }
 
       this.getListAllProjects(this.infosUser);
 
@@ -114,7 +114,6 @@ export class MyProjectListCompanyOwnerComponent implements OnInit {
   updateExpireDateLimiteFonsCollecte(indexProject) {
 
 
-
     //  console.log("indexProject = " + indexProject + " & " + this.listProjects[indexProject]._statut_project.nom);
 
     if (this.listProjects[indexProject]._statut_project.nom === 'Valide' || this.listProjects[indexProject]._statut_project.nom === 'Renouvele') {
@@ -127,12 +126,14 @@ export class MyProjectListCompanyOwnerComponent implements OnInit {
 
       this.apiService.updateDataProjectByUser(this.listProjects[indexProject]).subscribe((dataProject: ProjectModel) => {
 
-        console.log("methode-updateExpireDateLimiteFonsCollecte", dataProject);
+        console.log('methode-updateExpireDateLimiteFonsCollecte', dataProject);
 
       }, (error: any) => {
 
         this.ngxService.stop();
       });
+
+
     }
 
 
@@ -178,7 +179,7 @@ export class MyProjectListCompanyOwnerComponent implements OnInit {
     tmp = Math.floor((tmp - diff.hour) / 24);   // Nombre de jours restants
     diff.day = tmp;
 
-    console.log("diff", diff);
+    // console.log("diff", diff);
 
     return diff;
   }
@@ -249,62 +250,27 @@ export class MyProjectListCompanyOwnerComponent implements OnInit {
 
 
 
-  removeImageByIdImage(idImage) {
 
-
-    /* this.apiService.deleteImagesByProject(idImage).subscribe((data: any) => {
-   
-         // console.log(data);
-   
-       }, (error: any) => {
-   
-      }); */
-
-
-  }
 
   removeProject(indexProject) {
 
     /*  if (confirm('Vous ete sure de supprimer le projet ')) {
            /*********************** Supression les images associe au project ******************************** */
 
-    //this.getAllImagesByIdProject(this.listProjects[indexProject].id);
+    // this.getAllImagesByIdProject(this.listProjects[indexProject].id);
 
     /**********************  Supression fiche project ****************************** */
 
     /* this.apiService.deleteProject(this.listProjects[indexProject].id).subscribe((data: any) => {
-   
+
        // console.log(data);
-   
+
        this.listProjects.splice(indexProject, 1);
-   
+
        }, (error: any) => {
-   
+
       });
      } */
-
-  }
-
-  getAllImagesByIdProject(idProject) {
-
-
-    this.apiService.getAllImagesByIdProject(idProject).subscribe((data: any) => {
-
-      // console.log(data);
-
-      // tslint:disable-next-line:prefer-for-of
-      for (let index = 0; index < data.length; index++) {
-
-        this.removeImageByIdImage(data[index].id);
-
-
-      }
-
-    }, (error: any) => {
-
-    });
-
-
 
   }
 

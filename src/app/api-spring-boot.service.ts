@@ -4,7 +4,8 @@ import {UserModel, ProjectModel, ProjectModelBis,  ImageProjectModel
   , AdressReseauxSociauxProjectModel, commentProjectModel, StatutProjectModel,
   QuestionRepProjectByAdminForUserModel, QuestionRepProjectByUserForAdminModel,
     QuestionRepProjectByUserForUserModel, InvestiteurProjectModelBis, fondInvestorBis, FavorisProjectUserModel,
-    HeartProjectUserModel} from './interfaces/models';
+    HeartProjectUserModel, LikeProjectUserModel, VueProjectUserModel, NewsProjectModel, CommissionProjectModel} from './interfaces/models';
+import { Observable } from 'rxjs/internal/Observable';
 
 
 
@@ -12,14 +13,16 @@ import {UserModel, ProjectModel, ProjectModelBis,  ImageProjectModel
   providedIn: 'root'
 })
 
-export class apiHttpSpringBootService { 
+export class apiHttpSpringBootService {
 
   // https://json-server-growdlending.herokuapp.com
+
+  // https://api-springboot-crowdfunding-h2.herokuapp.com/
 
   // http://api-spring-boot-crowdlending-api-spring-boot-crowdlending.apps.us-east-2.starter.openshift-online.com/api
 
   // tslint:disable-next-line:max-line-length
-  private apiUrlCloud = 'https://api-spring-boot-h2-database.herokuapp.com/api';
+  private apiUrlCloud = 'http://api-spring-boot-crowdlending-api-spring-boot-crowdlending.apps.us-east-2.starter.openshift-online.com/api';
 
 
 
@@ -29,20 +32,36 @@ export class apiHttpSpringBootService {
 
       if (baseUrl === 'http://localhost:4200/'){
 
-           this.apiUrlCloud = 'https://api-spring-boot-h2-database.herokuapp.com/api';
+           this.apiUrlCloud = 'http://localhost:8080/api';
 
       }
   }
 
-  public getStatistiquesCharts(){
+
+  public checkCommissionProjectByAdmin(objectUser: UserModel, objectProject: ProjectModel){
 
 
-    const  url = this.apiUrlCloud + '/admin/statistiques_charts';
+    const  url = this.apiUrlCloud + '/admin/'  + objectUser.token + '/projects/' + objectProject.token + '/checkCommissionProject';
 
-    return this.http.get(url);
+    return this.http.post(url, objectUser);
+
+  }
+
+  public addCommissionProjectByAdmin(objectUser: UserModel, objectProject: ProjectModel, objectCommissionProject: CommissionProjectModel){
 
 
+    const  url = this.apiUrlCloud + '/admin/'  + objectUser.token + '/projects/' + objectProject.token + '/createCommissionProject';
 
+    return this.http.post(url, objectCommissionProject);
+
+  }
+
+  public getStatistiquesNewUsersChartsByAdmin(objectUser: UserModel){
+
+
+    const  url = this.apiUrlCloud + '/admin/users/statistiques_charts';
+
+    return this.http.post(url, objectUser);
 
   }
 
@@ -81,8 +100,33 @@ export class apiHttpSpringBootService {
 
   }
 
+  public getInfosUserByAdminToken(objetUser, tokenUser){
 
-   public identificationUser(objectConnection){
+    const  url = this.apiUrlCloud + '/admin/users/' + tokenUser + '/infos';
+
+    return this.http.post(url, objetUser);
+
+
+  }
+
+  public listMyProjectByUserByAdmin(objetUser, tokenUser){
+
+    const  url = this.apiUrlCloud + '/admin/users/' + tokenUser + '/my_projects';
+
+    return this.http.post(url, objetUser);
+
+  }
+
+  public listContribProjectByUserByAdmin(objetUser, tokenUser){
+
+    const  url = this.apiUrlCloud + '/admin/users/' + tokenUser + '/contrib_projects';
+
+    return this.http.post(url, objetUser);
+
+  }
+
+
+   public identificationUser(objectConnection): Observable<UserModel>{
 
     const  url = this.apiUrlCloud + '/users/checkUser';
 
@@ -93,7 +137,7 @@ export class apiHttpSpringBootService {
                              password : objectConnection.passwordLogin
     };
 
-    return this.http.post(url, objectConnectionBis);
+    return this.http.post<UserModel>(url, objectConnectionBis);
 
 
   }
@@ -167,9 +211,170 @@ export class apiHttpSpringBootService {
 
   }
 
+  checkVueProjectByUser(objectProject, objectUser){
+
+    const url = this.apiUrlCloud + '/user/projects/' + objectProject.token + '/checkVueProject';
+
+    return this.http.post(url, objectUser);
+
+  }
+
+  addVueProjectByUser(objectVueProject: VueProjectUserModel){
+
+    console.log('objectVueProject._project.token', objectVueProject._project.token);
+
+    const url = this.apiUrlCloud + '/user/projects/' + objectVueProject._project.token + '/vues_project/create';
+
+    return this.http.post(url, objectVueProject);
+
+  }
+
+  updateVueProjectByUser(objectVueProject: VueProjectUserModel){
+
+    console.log('objectVueProject._project.token', objectVueProject._project.token);
+
+    const url = this.apiUrlCloud + '/user/projects/' + objectVueProject._project.token + '/vues_project/update';
+
+    return this.http.put(url, objectVueProject);
+
+  }
+
+  checkLikeDislikeProjectByUser(objectProject, objectUser){
+
+    const url = this.apiUrlCloud + '/user/projects/' + objectProject.token + '/checkLikeProject';
+
+    return this.http.post(url, objectUser);
+
+  }
+
+  addNewsProjectByUser(objectNews: NewsProjectModel){
+
+    const url = this.apiUrlCloud + '/user/projects/' + objectNews._project.token + '/news/create';
+
+    return this.http.post(url, objectNews);
+
+
+  }
+
+  getListNewsProjectByUser(objectProject: ProjectModelBis){
+
+    const url = this.apiUrlCloud + '/user/projects/' + objectProject.token + '/list_news_project';
+
+    return this.http.post(url, objectProject);
+
+  }
+
+
+
+  addLikeProjectByUser(objectLikeProject: LikeProjectUserModel){
+
+    console.log('objectLikeProject._project.token', objectLikeProject._project.token);
+
+    const url = this.apiUrlCloud + '/user/projects/' + objectLikeProject._project.token + '/like_dislike_project/create';
+
+    return this.http.post(url, objectLikeProject);
+
+  }
+
+  updateLikeProjectByUser(objectLikeProject: LikeProjectUserModel){
+
+    console.log('objectLikeProject._project.token', objectLikeProject._project.token);
+
+    const url = this.apiUrlCloud + '/user/projects/' + objectLikeProject._project.token + '/like_dislike_project/update';
+
+    return this.http.put(url, objectLikeProject);
+
+  }
+
+  deleteLikeProjectByUser(objectLikeProject: LikeProjectUserModel){
+
+    console.log('objectLikeProject._project.token', objectLikeProject._project.token);
+
+    const url = this.apiUrlCloud + '/user/projects/' + objectLikeProject._project.token + '/like_dislike_project/delete';
+
+    return this.http.post(url, objectLikeProject);
+
+  }
+
+  public getStatistiquesHeartsMonthChartsByUser(ObjetOptionStatMonth, objectProject, objectUser){
+
+
+    const  url = this.apiUrlCloud + '/user/projects/' + objectProject.token + '/statis_Heart_project_month/' + ObjetOptionStatMonth.year + '/' + ObjetOptionStatMonth.month;
+
+    return this.http.post(url, objectUser);
+
+  }
+
+  public getStatistiquesVuesMonthChartsByUser(ObjetOptionStatMonth, objectProject, objectUser){
+
+
+    // tslint:disable-next-line:max-line-length
+    const  url = this.apiUrlCloud + '/user/projects/' + objectProject.token + '/statis_Vue_project_month/' + ObjetOptionStatMonth.year + '/' + ObjetOptionStatMonth.month;
+
+    return this.http.post(url, objectUser);
+
+  }
+
+  public getStatistiquesLikeMonthChartsByUser(ObjetOptionStatMonth, objectProject, objectUser){
+
+
+    // tslint:disable-next-line:max-line-length
+    const  url = this.apiUrlCloud + '/user/projects/' + objectProject.token + '/statis_Like_project_month/' + ObjetOptionStatMonth.year + '/' + ObjetOptionStatMonth.month;
+
+    return this.http.post(url, objectUser);
+
+  }
+
+  public getStatistiquesDislikeMonthChartsByUser(ObjetOptionStatMonth, objectProject, objectUser){
+
+
+    // tslint:disable-next-line:max-line-length
+    const  url = this.apiUrlCloud + '/user/projects/' + objectProject.token + '/statis_Dislike_project_month/' + ObjetOptionStatMonth.year + '/' + ObjetOptionStatMonth.month;
+
+    return this.http.post(url, objectUser);
+
+  }
+
+  public getStatistiquesHeartsChartsByUser(objectProject, objectUser){
+
+
+    const  url = this.apiUrlCloud + '/user/projects/' + objectProject.token + '/statis_Heart_project_mensuel';
+
+    return this.http.post(url, objectUser);
+
+  }
+
+  public getStatistiquesVuesChartsByUser(objectProject, objectUser){
+
+
+    const  url = this.apiUrlCloud + '/user/projects/' + objectProject.token + '/statis_Vue_project_mensuel';
+
+    return this.http.post(url, objectUser);
+
+  }
+
+  public getStatistiquesLikesChartsByUser(objectProject, objectUser){
+
+
+    const  url = this.apiUrlCloud + '/user/projects/' + objectProject.token + '/statis_Likes_project_mensuel';
+
+    return this.http.post(url, objectUser);
+
+  }
+
+
+  public getStatistiquesDislikesChartsByUser(objectProject, objectUser){
+
+
+    const  url = this.apiUrlCloud + '/user/projects/' + objectProject.token + '/statis_Dislikes_project_mensuel';
+
+    return this.http.post(url, objectUser);
+
+  }
+
   checkHeartProjectByUser(objectProject, objectUser){
 
-    const url = this.apiUrlCloud + '/user/projects/' + objectProject.token + '/checkHeartProject';
+    const url = this.apiUrlCloud + '/users/' + objectUser.token + '/projects/' + objectProject.token + '/checkHeartProject';
 
     return this.http.post(url, objectUser);
 
@@ -177,9 +382,9 @@ export class apiHttpSpringBootService {
 
   addHeartProjectByUser(objectHeartProject: HeartProjectUserModel){
 
-    console.log("objectHeartProject._project.token", objectHeartProject._project.token);
+    console.log('objectHeartProject._project.token', objectHeartProject._project.token);
 
-    const url = this.apiUrlCloud + '/user/projects/' + objectHeartProject._project.token + '/hearts_project/create';
+    const url = this.apiUrlCloud + '/users/' + objectHeartProject._user.token + '/projects/' + objectHeartProject._project.token + '/hearts_project/create';
 
     return this.http.post(url, objectHeartProject);
 
@@ -187,7 +392,7 @@ export class apiHttpSpringBootService {
 
   deleteHeartProjectByUser(objectHeartProject: HeartProjectUserModel){
 
-    const url = this.apiUrlCloud + '/user/projects/' + objectHeartProject._project.token + '/hearts_project/delete';
+    const url = this.apiUrlCloud + '/users/' + objectHeartProject._user.token + '/projects/' + objectHeartProject._project.token + '/hearts_project/delete';
 
     return this.http.post(url, objectHeartProject);
 
@@ -195,7 +400,7 @@ export class apiHttpSpringBootService {
 
   public addProjectByMyFavoris(objectFavoris: FavorisProjectUserModel){
 
-    const  url = this.apiUrlCloud + '/user/projects/' + objectFavoris._project.token + '/favoris_projects/create';
+    const  url = this.apiUrlCloud + '/users/' + objectFavoris._user.token + '/projects/' + objectFavoris._project.token + '/favoris_projects/create';
 
     return this.http.post(url, objectFavoris);
 
@@ -204,7 +409,7 @@ export class apiHttpSpringBootService {
 
   checkFavorisProjectByUser(objectProject, objectUser){
 
-    const url = this.apiUrlCloud + '/projects/' + objectProject.token + '/checkFavorisProjects';
+    const url = this.apiUrlCloud + '/users/' + objectUser.token + '/projects/' + objectProject.token + '/checkFavorisProjects';
 
     return this.http.post(url, objectUser);
 
@@ -212,7 +417,7 @@ export class apiHttpSpringBootService {
 
   deleteFavorisProjectByUser(objectFavoris: FavorisProjectUserModel){
 
-    const  url = this.apiUrlCloud + '/user/projects/' + objectFavoris._project.token + '/favoris_projects/delete';
+    const  url = this.apiUrlCloud + '/users/' + objectFavoris._user.token + '/projects/' + objectFavoris._project.token + '/favoris_projects/delete';
 
     return this.http.post(url, objectFavoris);
 
@@ -220,9 +425,9 @@ export class apiHttpSpringBootService {
 
 
 
-  public addProjectByCompanyOwner(objectProject){
+  public addProjectByCompanyOwner(objectProject: ProjectModel){
 
-    const url = this.apiUrlCloud + '/projects/create';
+    const url = this.apiUrlCloud + '/users/' + objectProject._user.token + '/projects/create';
 
 
     const newObjetProject = {
@@ -246,23 +451,8 @@ export class apiHttpSpringBootService {
 
   public updateDataProjectByUser(objectProject: ProjectModel){
 
-    const url = this.apiUrlCloud + '/user/my_projects/update';
 
-
-   /* const newObjetProject = {
-                           nom: objectProject.nom,
-                           description : objectProject.description,
-                           montant_minimun : objectProject.montant_minimun,
-                           date_limite_collecte : objectProject.date_limite_collecte,
-                           _user : objectProject.token_user,
-                           contrePartieProject : objectProject.contrePartieProject,
-                           afficheProject : objectProject.afficheProject,
-                           _statut_project : objectProject._statut_project,
-                           valid_project : objectProject.valid_project,
-                           _porte_project : objectProject._porte_project,
-                           categoryProject : objectProject.categoryProject
-              }; */
-
+    const url = this.apiUrlCloud + '/users/' + objectProject._user.token + '/my_projects/' + objectProject.token + '/update';
 
     return this.http.put(url, objectProject);
 
@@ -272,21 +462,6 @@ export class apiHttpSpringBootService {
   public updateDataProjectByAdmin(objectProject: ProjectModel){
 
     const url = this.apiUrlCloud + '/admin/projects/update';
-
-
-   /* const newObjetProject = {
-                           nom: objectProject.nom,
-                           description : objectProject.description,
-                           montant_minimun : objectProject.montant_minimun,
-                           date_limite_collecte : objectProject.date_limite_collecte,
-                           _user : objectProject.token_user,
-                           contrePartieProject : objectProject.contrePartieProject,
-                           afficheProject : objectProject.afficheProject,
-                           _statut_project : objectProject._statut_project,
-                           valid_project : objectProject.valid_project,
-                           _porte_project : objectProject._porte_project,
-                           categoryProject : objectProject.categoryProject
-              }; */
 
 
     return this.http.put(url, objectProject);
@@ -309,9 +484,25 @@ export class apiHttpSpringBootService {
 
   }
 
+  listAllProjectsFiltreByTagForUser(tag: string){
+
+    const url = this.apiUrlCloud + '/user/projects/searchByKeyword';
+
+    return this.http.post(url, tag);
+
+  }
+
+  listAllProjectsFiltreByTagForAdmin(tag: string){
+
+    const url = this.apiUrlCloud + '/admin/projects/searchByKeyword';
+
+    return this.http.post(url, tag);
+
+  }
+
   listAllFavorisProjectByUser(objectUser: UserModel){
 
-    const url = this.apiUrlCloud + '/user/projects/' + objectUser.token + '/list_favoris_projects';
+    const url = this.apiUrlCloud + '/users/' + objectUser.token + '/projects/list_favoris_projects';
 
     return this.http.post(url, objectUser);
 
@@ -321,7 +512,7 @@ export class apiHttpSpringBootService {
 
   listMyProjectByUser(objectUser: UserModel){
 
-    const url = this.apiUrlCloud + '/user/my_projects';
+    const url = this.apiUrlCloud + '/users/' + objectUser.token + '/my_projects';
 
     return this.http.post(url, objectUser);
 
@@ -329,7 +520,7 @@ export class apiHttpSpringBootService {
 
   listMyContribProjectByUser(objectUser: UserModel){
 
-    const url = this.apiUrlCloud + '/user/my_contrib_projects';
+    const url = this.apiUrlCloud + '/users/' + objectUser.token + '/my_contrib_projects';
 
     return this.http.post(url, objectUser);
 
@@ -337,7 +528,7 @@ export class apiHttpSpringBootService {
 
   listAllProjectByUser(objectUser: UserModel){
 
-    const url = this.apiUrlCloud + '/user/all_projects';
+    const url = this.apiUrlCloud + '/users/' + objectUser.token + '/all_projects';
 
     return this.http.post(url, objectUser);
 
@@ -371,7 +562,7 @@ export class apiHttpSpringBootService {
 
   public addImageProject(objectImage: ImageProjectModel){
 
-    const url = this.apiUrlCloud + '/user/projects/' + objectImage._project.token + '/create_link_image';
+    const url = this.apiUrlCloud + '/users/' + objectImage._project._user.token +  '/projects/' + objectImage._project.token + '/create_link_image';
 
 
     return this.http.post(url, objectImage);
@@ -380,7 +571,7 @@ export class apiHttpSpringBootService {
 
   public deleteImageProject(objectImage: ImageProjectModel){
 
-    const url = this.apiUrlCloud + '/user/projects/' + objectImage._project.token + '/delete_link_image';
+    const url = this.apiUrlCloud + '/users/' + objectImage._project._user.token +  '/projects/' + objectImage._project.token + '/delete_link_image';
 
 
     return this.http.post(url, objectImage);
@@ -397,7 +588,7 @@ export class apiHttpSpringBootService {
 
   public addAdressReseauSocialProject(objectAdress){
 
-    const url = this.apiUrlCloud + '/projects/create_adress_res_social';
+    const url = this.apiUrlCloud + '/users/' + objectAdress._project._user.token +  '/projects/' + objectAdress._project.token + '/create_adress_res_social';
 
 
     return this.http.post(url, objectAdress);
@@ -406,7 +597,7 @@ export class apiHttpSpringBootService {
 
   public deleteAdressReseauSocialProject(objectAdress: AdressReseauxSociauxProjectModel){
 
-    const url = this.apiUrlCloud + '/user/projects/' + objectAdress._project.token + '/delete_adress_social';
+    const url = this.apiUrlCloud + '/users/' + objectAdress._project._user.token + '/projects/' + objectAdress._project.token + '/delete_adress_social';
 
     return this.http.post(url, objectAdress);
 
@@ -424,7 +615,7 @@ export class apiHttpSpringBootService {
 
   public addCommentProject(objectComment){
 
-    const url = this.apiUrlCloud + '/projects/' + objectComment._project.token + '/comments/create';
+    const url = this.apiUrlCloud + '/users/' + objectComment._project._user.token + '/projects/' + objectComment._project.token + '/comments/create';
 
 
     return this.http.post(url, objectComment);
@@ -439,11 +630,11 @@ export class apiHttpSpringBootService {
 
   }
 
-  public createQuestionReponsesByAdminForUser(objectQuestion: QuestionRepProjectByAdminForUserModel){
+  public createQuestionReponsesByAdminForUser(objectUser: UserModel, objectQuestion: QuestionRepProjectByAdminForUserModel){
 
     console.log('objectQuestion=', objectQuestion);
 
-    const url = this.apiUrlCloud + '/projects/' + objectQuestion._project.token + '/QuestRepByProjectByAdminForUser/create';
+    const url = this.apiUrlCloud + '/admin/' + objectUser.token + '/projects/' + objectQuestion._project.token + '/QuestRepByProjectByAdminForUser/create';
 
 
     return this.http.post(url, objectQuestion);
@@ -452,17 +643,17 @@ export class apiHttpSpringBootService {
 
   getListQuestionReponsesByAdminForUser(objectProject: ProjectModel){
 
-    const url = this.apiUrlCloud + '/projects/' + objectProject.token + '/list_questions_rep_by_admin_for_user';
+    const url = this.apiUrlCloud +  '/projects/' + objectProject.token + '/list_questions_rep_by_admin_for_user';
 
     return this.http.post(url, objectProject);
 
   }
 
-  public createQuestionReponsesByUserForAdmin(objectQuestion: QuestionRepProjectByUserForAdminModel){
+  public createQuestionReponsesByUserForAdmin(objectUser: UserModel, objectQuestion: QuestionRepProjectByUserForAdminModel){
 
     console.log('objectQuestion=', objectQuestion);
 
-    const url = this.apiUrlCloud + '/projects/' + objectQuestion._project.token + '/QuestRepByProjectByUserForAdmin/create';
+    const url = this.apiUrlCloud + '/users/' + objectUser.token + '/projects/' + objectQuestion._project.token + '/QuestRepByProjectByUserForAdmin/create';
 
 
     return this.http.post(url, objectQuestion);
@@ -485,14 +676,22 @@ export class apiHttpSpringBootService {
 
   }
 
-  public createQuestionReponsesByUserForUser(objectQuestion){
+  public createQuestionReponsesByUserForUser(objectUser: UserModel, objectQuestion){
 
-    console.log('objectQuestion=', objectQuestion);
+    // console.log('objectQuestion=', objectQuestion);
 
-    const url = this.apiUrlCloud + '/projects/' + objectQuestion._project.token + '/QuestRepByProjectByUserForUser/create';
+    const url = this.apiUrlCloud + '/users/' + objectUser.token + '/projects/' + objectQuestion._project.token + '/QuestRepByProjectByUserForUser/create';
 
 
     return this.http.post(url, objectQuestion);
+
+  }
+
+  checkInvestiteurProject(objectProject: ProjectModelBis, objectUser: UserModel){
+
+    // tslint:disable-next-line:max-line-length
+  const url = this.apiUrlCloud + '/projects/' + objectProject.token + '/investisseurs_project/check_invest_project';
+  return this.http.post(url, objectUser);
 
   }
 
@@ -504,38 +703,32 @@ export class apiHttpSpringBootService {
 
   }
 
-  sendDemandeInvestorByProject(objectDemandeInvestProject: InvestiteurProjectModelBis){
+  sendDemandeInvestorByProject(objectUser: UserModel, objectDemandeInvestProject: InvestiteurProjectModelBis){
 
-    const url = this.apiUrlCloud + '/projects/' + objectDemandeInvestProject._project.token + '/investisseurs_project/createDemandeInvest';
+    const url = this.apiUrlCloud + '/users/' + objectUser.token + '/projects/' + objectDemandeInvestProject._project.token + '/investisseurs_project/createDemandeInvest';
 
     return this.http.post(url, objectDemandeInvestProject);
 
   }
 
-  acceptDemandeInvestorByProject(objectDemandeInvestProject: InvestiteurProjectModelBis){
+  acceptDemandeInvestorByProject(objectUser: UserModel, objectDemandeInvestProject: InvestiteurProjectModelBis){
 
     // tslint:disable-next-line:max-line-length
-    const url = this.apiUrlCloud + '/projects/' + objectDemandeInvestProject._project.token + '/investisseurs_project/' + objectDemandeInvestProject.token + '/updateDemandeInvest';
+    const url = this.apiUrlCloud + '/users/' + objectUser.token + '/projects/' + objectDemandeInvestProject._project.token + '/investisseurs_project/' + objectDemandeInvestProject.token + '/updateDemandeInvest';
 
     return this.http.put(url, objectDemandeInvestProject);
 
   }
 
-  declinDemandeInvestorByProject(objectDemandeInvestProject: InvestiteurProjectModelBis){
+  declinDemandeInvestorByProject(objectUser: UserModel, objectDemandeInvestProject: InvestiteurProjectModelBis){
 
       // tslint:disable-next-line:max-line-length
-    const url = this.apiUrlCloud + '/projects/' + objectDemandeInvestProject._project.token + '/investisseurs_project/' + objectDemandeInvestProject.token + '/updateDemandeInvest';
+    const url = this.apiUrlCloud + '/users/' + objectUser.token + '/projects/' + objectDemandeInvestProject._project.token + '/investisseurs_project/' + objectDemandeInvestProject.token + '/updateDemandeInvest';
     return this.http.put(url, objectDemandeInvestProject);
 
   }
 
-  checkInvestiteurProject(objectProject: ProjectModelBis, objectUser: UserModel){
 
-    // tslint:disable-next-line:max-line-length
-  const url = this.apiUrlCloud + '/projects/' + objectProject.token + '/investisseurs_project/check_invest_project';
-  return this.http.post(url, objectUser);
-
-  }
 
   saveDataTransactionPaypal(objectFondInvestor: fondInvestorBis){
 

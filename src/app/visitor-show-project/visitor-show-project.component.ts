@@ -64,6 +64,18 @@ export class VisitorShowProjectComponent implements OnInit {
 
          this.ObjetProjectTemplate.project = dataPorject;
 
+         if (this.ObjetProjectTemplate.project.description.indexOf('<p>') >= 0){
+
+          this.ObjetProjectTemplate.project.description = this.ObjetProjectTemplate.project.description.substr(3);
+
+         }
+
+         if (this.ObjetProjectTemplate.project.description.indexOf('</p>') >= 0){
+
+          // tslint:disable-next-line:max-line-length
+          this.ObjetProjectTemplate.project.description = this.ObjetProjectTemplate.project.description.substring(0, this.ObjetProjectTemplate.project.description.length - 4 );
+         }
+
          // tslint:disable-next-line:max-line-length
          this.ObjetProjectTemplate.project.date_limite_collecte = this.datePipe.transform(this.ObjetProjectTemplate.project.date_limite_collecte, 'dd-MM-yyyy');
 

@@ -1,9 +1,11 @@
-import { Component, OnInit, ElementRef, ViewChild} from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import { CookieService } from 'ngx-cookie-service';
-import {Router} from '@angular/router';
+import { Router } from '@angular/router';
 import { apiHttpSpringBootService } from './../api-spring-boot.service';
 import { ImageService } from './../image.service';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
+import { UserModel } from '../interfaces/models';
 
 
 declare var window: any;
@@ -16,103 +18,79 @@ declare var window: any;
 })
 export class ProfilUserComponent implements OnInit {
 
+  @ViewChild('recaptcha', { static: true }) recaptchaElement: ElementRef;
 
-  @ViewChild('recaptcha', {static: true }) recaptchaElement: ElementRef;
+  public infosUser: UserModel = new UserModel();
 
-  public infosUser = {
-                     id : '',
-                     nom: '',
-                     prenom : '',
-                     login : '',
-                     password : '',
-                     sex : '',
-                     date_naissance : '',
-                     photoUser : '',
-                     typeCompte : '',
-                     date_created: '',
-                     date_update: '',
-                     token : ''
-     };
+  public ObjetUpdateProfil: UserModel = new UserModel();
 
-     public ObjetUpdateProfil = {
-                               id : '',
-                               nom : '',
-                               prenom : '',
-                               login : '',
-                               password : '',
-                               photoUser : '',
-                               sex : '',
-                               date_naissance : '',
-                               typeCompte : '',
-                               date_created: '',
-                               date_update: '',
-                               token : ''
-       };
+  public isErreurUpdateProfil = false;
 
-    public isErreurUpdateProfil = false;
+  public isvalidUpdateProfil = false;
 
-    public isvalidUpdateProfil = false;
+  public imageTitle: string;
 
-    public imageTitle: string;
+  public imageDescription: string;
 
-    public imageDescription: string;
+  public imageFile: File;
 
-    public imageFile: File;
+  public arrayListSex = [
 
-    public arrayListSex = [
+    { key: 'H', value: 'Homme' },
+    { key: 'F', value: 'Femme' }
+  ];
 
-                            {key: 'H', value: 'Homme'},
-                            {key: 'F', value: 'Femme'}
-    ];
+  public urlImageProfil = '';
 
-    public urlImageProfil = '';
+  private isvalidCaptcha = false;
 
-    private isvalidCaptcha = false ;
-
-    public isErreurCaptcha = false;
+  public isErreurCaptcha = false;
 
   constructor(private router: Router, private cookie: CookieService, private apiService: apiHttpSpringBootService,
-              private imageService: ImageService, private ngxService: NgxUiLoaderService) {
+              private titleService: Title, private imageService: ImageService, private ngxService: NgxUiLoaderService) {
 
-       if (this.cookie.get('infosUser')){
-
-        this.infosUser = JSON.parse(this.cookie.get('infosUser'));
-
-        if (this.infosUser.photoUser === '' || !this.infosUser.photoUser){
-
-            if (this.infosUser.sex === 'F') {
-
-              this.infosUser.photoUser = './assets/img/users/user_f.png';
-
-              this.urlImageProfil = './assets/img/users/user_f.png';
-            }
-
-            if (this.infosUser.sex === 'H') {
-
-              this.infosUser.photoUser = './assets/img/users/user_m.png';
-
-              this.urlImageProfil = './assets/img/users/user_m.png';
-              }
-
-          }else{
-
-            this.urlImageProfil = this.infosUser.photoUser;
-
-          }
-
-        console.log('urlImageProfil', this.urlImageProfil);
-
-        console.log('ProfilUserComponent', this.infosUser);
-
-        this.ObjetUpdateProfil = this.infosUser ;
+    this.titleService.setTitle('profil-utilisateur');
 
 
+    if (this.cookie.get('infosUser')) {
+
+      this.infosUser = JSON.parse(this.cookie.get('infosUser'));
+
+      if (this.infosUser.photoUser === '' || !this.infosUser.photoUser) {
+
+        if (this.infosUser.sex === 'F') {
+
+          this.infosUser.photoUser = './assets/img/users/user_f.png';
+
+          this.urlImageProfil = './assets/img/users/user_f.png';
+        }
+
+        if (this.infosUser.sex === 'H') {
+
+          this.infosUser.photoUser = './assets/img/users/user_m.png';
+
+          this.urlImageProfil = './assets/img/users/user_m.png';
+        }
+
+      } else {
+
+        this.urlImageProfil = this.infosUser.photoUser;
+
+      }
+
+      // console.log('urlImageProfil', this.urlImageProfil);
+
+      // console.log('ProfilUserComponent', this.infosUser);
+
+      this.ObjetUpdateProfil = this.infosUser;
 
 
-       }else{
 
-           this.router.navigate(['/Identification']);
-       }
+
+    } else {
+
+      this.router.navigate(['/Identification']);
+    }
 
 
   }
@@ -124,15 +102,15 @@ export class ProfilUserComponent implements OnInit {
     const date = new Date();
 
     this.ObjetUpdateProfil.date_update = date.toLocaleString('fr-FR', {
-                                               weekday: 'long',
-                                               year : 'numeric',
-                                               month : 'long',
-                                               day : 'numeric',
-                                               hour : 'numeric',
-                                               minute : 'numeric',
-                                               second : 'numeric',
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric',
+      second: 'numeric',
 
-                     });
+    });
 
   }
 
@@ -142,7 +120,7 @@ export class ProfilUserComponent implements OnInit {
       this.renderReCaptcha();
     };
 
-    (function(d, s, id, obj){
+    (function(d, s, id, obj) {
       let js, fjs = d.getElementsByTagName(s)[0];
       if (d.getElementById(id)) { obj.renderReCaptcha(); return; }
       js = d.createElement(s); js.id = id;
@@ -154,43 +132,43 @@ export class ProfilUserComponent implements OnInit {
 
   renderReCaptcha() {
     window.grecaptcha.render(this.recaptchaElement.nativeElement, {
-      sitekey : '6Lf4I6gZAAAAAMp1E9YI1FJghdQ20CNRtAV9d55y',
+      sitekey: '6Lf4I6gZAAAAAMp1E9YI1FJghdQ20CNRtAV9d55y',
       callback: (response) => {
-          console.log('response', response);
+        console.log('response', response);
 
-          this.isvalidCaptcha = true;
+        this.isvalidCaptcha = true;
 
-          this.isErreurCaptcha = false;
+        this.isErreurCaptcha = false;
       }
     });
   }
 
-  onFormSubmitUpdateProfil(){
+  onFormSubmitUpdateProfil() {
 
 
-    if (this.isvalidCaptcha){
+    if (this.isvalidCaptcha) {
 
       this.ngxService.start();
 
 
       this.apiService.updateProfilUser(this.ObjetUpdateProfil).subscribe((data: any) => {
 
-        console.log(data);
+        // console.log(data);
 
-        if (!data){
+        if (!data) {
 
-               this.isErreurUpdateProfil = true;
+          this.isErreurUpdateProfil = true;
 
-        }else{
+        } else {
 
-             this.isvalidUpdateProfil = true;
+          this.isvalidUpdateProfil = true;
 
         }
 
 
-       }, (error: any) => {
+      }, (error: any) => {
 
-          this.isErreurUpdateProfil = true;
+        this.isErreurUpdateProfil = true;
 
       });
 
@@ -198,7 +176,7 @@ export class ProfilUserComponent implements OnInit {
 
       this.ngxService.stop();
 
-    }else{
+    } else {
 
       this.isErreurCaptcha = true;
     }
@@ -219,13 +197,13 @@ export class ProfilUserComponent implements OnInit {
     this.ngxService.start();
 
     const infoObject = {
-                      title: this.infosUser.nom + '_avatar',
-                      description: this.infosUser.nom + '_avatar'
-                    };
+      title: this.infosUser.nom + '_avatar',
+      description: this.infosUser.nom + '_avatar'
+    };
 
     this.imageService.uploadImage(this.imageFile, infoObject).then((imageData: any) => {
 
-      console.log(imageData.data.link);
+      // console.log(imageData.data.link);
 
       this.urlImageProfil = imageData.data.link;
 
@@ -236,7 +214,7 @@ export class ProfilUserComponent implements OnInit {
 
 
 
-     });
+    });
 
   }
 

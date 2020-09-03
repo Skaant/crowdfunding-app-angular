@@ -61,7 +61,7 @@ export class VisitorFormContactComponent implements OnInit {
 
   renderReCaptcha() {
     window.grecaptcha.render(this.recaptchaElement.nativeElement, {
-      sitekey : '6Lf4I6gZAAAAAMp1E9YI1FJghdQ20CNRtAV9d55y',
+      sitekey: '6Lf4I6gZAAAAAMp1E9YI1FJghdQ20CNRtAV9d55y',
       callback: (response) => {
           console.log('response', response);
 

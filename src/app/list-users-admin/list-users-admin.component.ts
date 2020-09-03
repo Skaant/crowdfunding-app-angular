@@ -5,7 +5,7 @@ import { apiHttpSpringBootService } from './../api-spring-boot.service';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { DatePipe } from '@angular/common';
 import { ChartOptions, ChartType, ChartDataSets } from 'chart.js';
-import { Label } from 'ng2-charts';
+import { Color, Label, MultiDataSet } from 'ng2-charts';
 
 import { UserModel, StatistiquesChartsUsersModel } from '../interfaces/models';
 
@@ -26,16 +26,64 @@ export class ListUsersAdminComponent implements OnInit {
 
   public collectionSize = 0;
 
+  /************** Config Bar charts*********************** */
+
   barChartOptions: ChartOptions = {
                                    responsive: true,
              };
-  //barChartLabels: Label[] = ['Apple', 'Banana', 'Kiwifruit', 'Blueberry', 'Orange', 'Grapes'];
+  
   barChartLabels: Label[] = [];
   barChartType: ChartType = 'bar';
   barChartLegend = true;
   barChartPlugins = [];
 
-  barChartData: ChartDataSets[] = [  { data: [], label: 'Best Fruits' } ];
+  barChartData: ChartDataSets[] = [  { data: [], label: 'Nombre de nouveaux utilisateurs' } ];
+
+
+  /**************************************************************** */
+
+
+  lineChartData: ChartDataSets[] = [
+    { data: [], label: 'Nombre de nouveaux utilisateurs' },
+  ];
+
+  lineChartLabels: Label[] = [];
+
+  lineChartOptions = {
+    responsive: true,
+  };
+
+  lineChartColors: Color[] = [
+    {
+      borderColor: 'black',
+      backgroundColor: 'rgba(255,255,0,0.28)',
+    },
+  ];
+
+  lineChartLegend = true;
+  lineChartPlugins = [];
+  lineChartType = 'line';
+
+
+
+  /********************************************************************* */
+
+ /* doughnutChartLabels: Label[] = ['BMW', 'Ford', 'Tesla'];
+  doughnutChartData: MultiDataSet = [
+    [55, 25, 20]
+  ];*/
+
+  doughnutChartLabels: Label[] = [];
+  doughnutChartData: MultiDataSet = [ [] ];
+  doughnutChartType: ChartType = 'doughnut';
+
+
+   /********************************************************************* */
+
+
+
+
+      /********************************************************************* */
 
 
   constructor(private router: Router, private cookie: CookieService, private apiService: apiHttpSpringBootService,
@@ -44,6 +92,9 @@ export class ListUsersAdminComponent implements OnInit {
     if (this.cookie.get('infosUser')) {
 
       this.infosUser = JSON.parse(this.cookie.get('infosUser'));
+
+
+      console.log('this.infosUser-admin', this.infosUser);
 
       this.apiService.checkAdminByToken(this.infosUser).subscribe((data: any) => {
 
@@ -67,7 +118,7 @@ export class ListUsersAdminComponent implements OnInit {
 
           }
 
-
+          // alert('this.infosUser.typecompte = ' + this.infosUser.typeCompte);
 
           console.log('ProfilUserComponent', this.infosUser);
 
@@ -94,11 +145,7 @@ export class ListUsersAdminComponent implements OnInit {
 
   }
 
-  ngOnInit(): void { 
-
-     //  const data = [45, 37, 60, 70, 46, 33];
-
-       //this.barChartData[0].data = data;
+  ngOnInit(): void {
 
        this.getStatistiquesUsers();
 
@@ -106,15 +153,34 @@ export class ListUsersAdminComponent implements OnInit {
 
    getStatistiquesUsers(){
 
-       this.apiService.getStatistiquesCharts().subscribe((dataUsers: Array<StatistiquesChartsUsersModel>) => {
+       this.apiService.getStatistiquesNewUsersChartsByAdmin(this.infosUser).subscribe((dataUsers: Array<StatistiquesChartsUsersModel>) => {
 
         dataUsers.forEach(element => {
 
                console.log(element);
 
+               /*********************************************** */
+
                this.barChartData[0].data.push(element.nbrUsers);
 
                this.barChartLabels.push(element.year);
+
+
+               /*********************************************** */
+
+               this.lineChartData[0].data.push(element.nbrUsers);
+
+               this.lineChartLabels.push(element.year);
+
+
+               /*********************************************** */
+
+               this.doughnutChartData[0].push(element.nbrUsers);
+
+               this.doughnutChartLabels.push(element.year);
+
+              /*********************************************** */
+
 
         });
 

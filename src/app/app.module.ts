@@ -1,8 +1,10 @@
-import { BrowserModule } from '@angular/platform-browser';
+import { BrowserModule, Title } from '@angular/platform-browser';
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import {HttpClientModule} from '@angular/common/http';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core'; // module translation
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';  // module translation
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service'; // https://www.npmjs.com/package/ngx-cookie-service
@@ -17,7 +19,8 @@ import { apiHttpJsonService } from './api.json.http.service';
 import { apiHttpSpringBootService } from './api-spring-boot.service';
 import { ImageService } from './image.service';
 import { NgxUiLoaderModule } from 'ngx-ui-loader';
-import {DpDatePickerModule} from 'ng2-date-picker';  // https://www.npmjs.com/package/ng2-date-picker
+// tslint:disable-next-line:max-line-length
+import {DpDatePickerModule} from 'ng2-date-picker';  // https://www.npmjs.com/package/ng2-date-picker  // https://github.com/golfadas/ng2-date-picker  // https://medium.com/letsboot/lets-pick-a-date-with-ng2-datepicker-1ba2d9593a66
 import { ChartsModule } from 'ng2-charts';
 
 
@@ -40,6 +43,8 @@ import { ProjectShowCompanyOwnerComponent } from './project-show-company-owner/p
 import { MyProjectShowCompanyOwnerComponent } from './my-project-show-company-owner/my-project-show-company-owner.component';
 import { MyFavorisProjectsCompanyOwnerComponent } from './my-favoris-projects-company-owner/my-favoris-projects-company-owner.component';
 import { MyContribProjectsComponent } from './my-contrib-projects/my-contrib-projects.component';
+// tslint:disable-next-line:max-line-length
+import { ListProjectsByFiltreByTagUserComponent } from './list-projects-by-filtre-by-tag-user/list-projects-by-filtre-by-tag-user.component';
 
 
 import { IdentificationAdminComponent } from './identification-admin/identification-admin.component';
@@ -48,9 +53,13 @@ import { ProjectsListAdminComponent } from './projects-list-admin/projects-list-
 import { ProjectShowAdminComponent } from './project-show-admin/project-show-admin.component';
 import { ListUsersAdminComponent } from './list-users-admin/list-users-admin.component';
 import {ShowProfilUserAdminComponent} from './show-profil-user-admin/show-profil-user-admin.component';
+// tslint:disable-next-line:max-line-length
+import { ListProjectsByFiltreByTagAdminComponent } from './list-projects-by-filtre-by-tag-admin/list-projects-by-filtre-by-tag-admin.component';
 
 import { FooterAccueilComponent } from './templates/accueil/footer/footer.component';
 import { NavBarAccueilComponent } from './templates/accueil/nav-bar/nav-bar.component';
+
+
 
 import { NavTemplatesUserComponent } from './templates/user/nav-templates/nav-templates.component';
 import { SideBarLeftTemplatesUserComponent } from './templates/user/side-bar-left-templates/side-bar-left-templates.component';
@@ -65,6 +74,11 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { NgxPayPalModule } from 'ngx-paypal';
 
+import { FroalaEditorModule, FroalaViewModule } from 'angular-froala-wysiwyg';  // https://github.com/froala/angular-froala-wysiwyg
+
+
+
+
 import { MatDateFormats, MAT_DATE_LOCALE, MAT_DATE_FORMATS } from '@angular/material/core';
 
 
@@ -76,6 +90,8 @@ import { ShowMessagerieAdminComponent } from './show-messagerie-admin/show-messa
 import { ShowMessagerieUserComponent } from './show-messagerie-user/show-messagerie-user.component';
 import { ShowMessagerieVisitorAdminComponent } from './show-messagerie-visitor-admin/show-messagerie-visitor-admin.component';
 import { SettingProfilUserComponent } from './setting-profil-user/setting-profil-user.component';
+
+
 
 
 
@@ -146,13 +162,21 @@ export function getBaseUrl() {
     ShowProfilUserAdminComponent,
     ShowMessagerieVisitorAdminComponent,
     SettingProfilUserComponent,
-
+    ListProjectsByFiltreByTagUserComponent,
+    ListProjectsByFiltreByTagAdminComponent,
   ],
   imports: [
     BrowserModule,
     RoutingModule,
     FormsModule,
     HttpClientModule,
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: httpTranslateLoader,
+        deps: [HttpClient]
+      }
+    }),
     RouterModule,
     MaterialModule,
     NoopAnimationsModule,
@@ -162,7 +186,8 @@ export function getBaseUrl() {
     NgxPayPalModule,
     DpDatePickerModule,
     ReactiveFormsModule,
-    ChartsModule
+    ChartsModule,
+    [FroalaEditorModule.forRoot(), FroalaViewModule.forRoot()],
 
   ],
   schemas: [
@@ -173,9 +198,14 @@ export function getBaseUrl() {
              { provide: MAT_DATE_FORMATS, useValue: MY_FORMAT },
              { provide: 'BASE_URL', useFactory: getBaseUrl },
              // tslint:disable-next-line:max-line-length
-             {provide: LocationStrategy, useClass: HashLocationStrategy} 
+             {provide: LocationStrategy, useClass: HashLocationStrategy},
+             Title
              ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
+
+export function httpTranslateLoader(http: HttpClient) {
+  return new TranslateHttpLoader(http);
+}
 

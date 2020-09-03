@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import {Router} from '@angular/router';
+import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-nav-user-templates',
@@ -10,48 +11,76 @@ import { CookieService } from 'ngx-cookie-service';
 export class NavTemplatesUserComponent implements OnInit {
 
   public infosUser = {
-                     id : '',
-                     nom: '',
-                     prenom : '',
-                     login : '',
-                     password : '',
-                     sex : '',
-                     photoUser : '',
-                     typeCompte : ''
-    };
+    id: '',
+    nom: '',
+    prenom: '',
+    login: '',
+    password: '',
+    sex: '',
+    photoUser: '',
+    typeCompte: ''
+  };
 
- public urlImageProfil: string;
+  public urlImageProfil: string;
+
+  public tagSearchGlobal = '';
 
 
-constructor(private router: Router, private cookie: CookieService) {
+  constructor(private router: Router, private cookie: CookieService, public translate: TranslateService) {
 
-  this.infosUser = JSON.parse(this.cookie.get('infosUser'));
+    translate.addLangs(['en', 'fr', 'es']);
 
-  if (this.infosUser.photoUser === ''){
+    if (this.cookie.get('lang_translat_user')) {
 
-    if (this.infosUser.sex === 'F') {
+      const langTranslat = this.cookie.get('lang_translat_user');
 
-      this.infosUser.photoUser = './assets/img/users/user_f.png';
+      translate.setDefaultLang(langTranslat);
 
-      this.urlImageProfil = './assets/img/users/user_f.png';
+    } else {
+
+      translate.setDefaultLang('en');
     }
 
-    if (this.infosUser.sex === 'H') {
+    this.infosUser = JSON.parse(this.cookie.get('infosUser'));
 
-      this.infosUser.photoUser = './assets/img/users/user_m.png';
+    if (this.infosUser.photoUser === '') {
 
-      this.urlImageProfil = './assets/img/users/user_m.png';
+      if (this.infosUser.sex === 'F') {
+
+        this.infosUser.photoUser = './assets/img/users/user_f.png';
+
+        this.urlImageProfil = './assets/img/users/user_f.png';
       }
 
-  }else{
+      if (this.infosUser.sex === 'H') {
 
-    this.urlImageProfil = this.infosUser.photoUser;
+        this.infosUser.photoUser = './assets/img/users/user_m.png';
+
+        this.urlImageProfil = './assets/img/users/user_m.png';
+      }
+
+    } else {
+
+      this.urlImageProfil = this.infosUser.photoUser;
+
+    }
+
 
   }
 
-  
- }
+  switchLang(lang: string) {
 
-ngOnInit(): void {  }
+    this.translate.use(lang);
+
+    this.cookie.set('lang_translat_user', lang);
+  }
+
+  ngOnInit(): void { }
+
+  searchGlobalProjectsByMotCle() {
+
+    this.router.navigate(['/user-search-projetcs-by-tag', { search: this.tagSearchGlobal }]);
+
+  }
 
 }

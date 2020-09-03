@@ -22,7 +22,7 @@ export class NavTemplatesAdministratorComponent implements OnInit {
 
  public urlImageProfil: string;
 
- public age: any;
+ public tagSearchGlobal = '' ;
 
 
 constructor(private router: Router, private cookie: CookieService) {
@@ -55,5 +55,11 @@ constructor(private router: Router, private cookie: CookieService) {
  }
 
 ngOnInit(): void { }
+
+searchGlobalProjectsByMotCle(){
+
+  this.router.navigate(['/admin-search-projetcs-by-tag', {search: this.tagSearchGlobal}]);
+
+}
 
 }

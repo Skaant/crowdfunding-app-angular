@@ -45,13 +45,13 @@
             
                         </div>
             
-                        <div class="row" style="margin-bottom: 5%;margin-top: 2%;">
+                        <div class="row" style="margin-bottom: 5%;margin-top: 2%;">                        
             
                          
+
+                      <!------------------------------------------------------------------------>
             
-                           <!------------------------------------------------------------------------>
-            
-                          <div class="col-lg-4">
+                          <div class="col-lg-3">
             
                             <div class="form-group">
             
@@ -75,7 +75,7 @@
             
                           <!------------------------------------------------------------------------>
             
-                          <div class="col-lg-4">
+                          <div class="col-lg-3">
             
                             <div class="form-group">
             
@@ -99,7 +99,7 @@
             
                           <!------------------------------------------------------------------------>
             
-                          <div class="col-lg-4">
+                          <div class="col-lg-3">
             
                             <div class="form-group">
             
@@ -133,7 +133,13 @@
               <h1 class="h3 mb-0 text-gray-800">LES PROJETS</h1>
              
             </div>
-  
+            
+            <div class="alert alert-warning alert-dismissible fade show" role="alert" *ngIf="listProjects.length==0" >
+              <strong>Aucun  projet!</strong> n'est disponible.
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
           
             <div class="row">                      
   
@@ -142,7 +148,7 @@
 
                 <div class="row text-center">  
   
-                  <div class="col-lg-4 col-md-6 mb-4"  *ngFor="let project of listProjects; let i = index ">
+                  <div class="col-lg-4 col-md-6 mb-4"  *ngFor="let project of listProjects ; let i = index "   >
                     <div class="card h-100" [routerLink]="['/admin-projetcs-show' , project.token ]"  >
                       <img class="card-img-top" [src]="project.afficheProject" alt="" style="width :500px;height:200px;margin-left:20%;">
                       <div class="card-body">
@@ -151,8 +157,54 @@
                         <h5 class="card-title"  *ngIf="project._statut_project.nom === 'Validé'">{{listtemplateProjects[i].nbrJours}}</h5>
                         <h5 class="card-title">{{listtemplateProjects[i].dateLimiteCollecteFormate}}</h5>                       
                         <h5 class="card-title">{{project.categoryProject.nom}}</h5>
-                        <h5 class="card-title" *ngIf="project.total_hearts>0"><img class="card-img-top" src="./assets/img/heart-icon.png"  alt="" style="width :35px;height:35px;text-align: center;" >{{project.total_hearts}}</h5>
-                        <img class="card-img-top" src="./assets/img/picto-dons-300x300.png" alt="" style="width :30px;height:30px;" ><span  style="font-weight: bold;">{{project.total_fonds}}&euro;</span>
+                        <table  style="margin-left: 10%;">
+
+                          <tr>
+
+                            <td width="10%">                                
+
+                              <img class="card-img-top" src="./assets/img/heart-icon.png"  alt="" style="width :35px;height:35px;" >
+
+                              <span>{{project.total_hearts}}</span>
+
+                            </td>
+
+                            <td width="30%"  style="text-align: center;">                                
+
+                              <img class="card-img-top" src="./assets/img/like_ico.png"  alt="" style="width :35px;height:35px;" >
+
+                              <span>{{project.total_like}}</span>
+                              
+                            </td>
+
+                            <td width="20%">                                     
+
+                              <img class="card-img-top" src="./assets/img/dislike_ico.png"  alt="" style="width :35px;height:35px;" >
+
+                              <span>{{project.total_dislike}}</span>
+                              
+                            </td>
+
+                            <td width="20%">                                     
+
+                              <img class="card-img-top" src="./assets/img/eye_ico.png"  alt="" style="width :38px;height:35px;" >
+
+                              <span>{{project.total_vues}}</span>
+                              
+                            </td>
+
+                            <td width="20%">                                     
+
+                              <img class="card-img-top" src="./assets/img/picto-dons-300x300.png"  alt="" style="width :38px;height:35px;" >
+
+                              <span>{{project.total_fonds}} &euro;</span>
+                              
+                            </td>
+
+                          </tr>
+                        </table>
+                       <!-- <h5 class="card-title" *ngIf="project.total_hearts>0"><img class="card-img-top" src="./assets/img/heart-icon.png"  alt="" style="width :35px;height:35px;text-align: center;" >{{project.total_hearts}}</h5>-->
+                        
                       </div>
                       <div class="card-footer">
 

@@ -1,9 +1,62 @@
+export class CommissionProjectModel {
+  id?: number;
+  amount: number;
+  token: string;
+  date_created: string;
+  timestamp: number;
+  created_at: string;
+  _project: ProjectModel;
+  manager_project: UserModel;
+}
+
+
+
+export class NewsProjectModel {
+  id?: number;
+  titre: string;
+  description: string;
+  photos: string;
+  date_created: string;
+  date_update?: string;
+  created_at: string;
+  update_at?: string;
+  timestamp: number;
+  _project: ProjectModel;
+}
+
+
 export class StatistiquesChartsUsersModel {
   year: string;
   nbrUsers: number;
 }
 
+export class StatistiquesChartsHeartModel {
+  year: number;
+  nbrHearts: number;
+  month: string;
+  day: string;
+}
 
+export class StatistiquesChartsVueModel {
+  year: number;
+  nbrVues: number;
+  month: string;
+  day: string;
+}
+
+export class StatistiquesChartsLikeModel {
+  year: number;
+  nbrLikes: number;
+  month: string;
+  day: string;
+}
+
+export class StatistiquesChartsDislikesModel {
+  year: number;
+  nbrDislikes: number;
+  month: string;
+  day: string;
+}
 
 export class FormContactModel {
   id: number;
@@ -30,7 +83,32 @@ export class FavorisProjectUserModel {
 export class HeartProjectUserModel {
   id: number;
   date_created: string;
-  timestamp: number; 
+  created_at?: string;
+  timestamp: number;
+  _project: ProjectModelBis;
+  _user: UserModel;
+}
+
+
+export class VueProjectUserModel {
+  id: number;
+  date_created: string;
+  date_update: string;
+  date_consultation: string;
+  timestamp: number;
+  ip_adress: string;
+  _project: ProjectModelBis;
+  _user: UserModel;
+}
+
+
+export class LikeProjectUserModel {
+  id: number;
+  date_created: string;
+  created_at: string;
+  date_update: string;
+  timestamp: number;
+  statut_like_project: string;
   _project: ProjectModelBis;
   _user: UserModel;
 }
@@ -122,14 +200,14 @@ export class UserModel {
     nom: string;
     prenom: string;
     login: string;
-    password: string;
+    password?: string;
     sex: string;
     date_naissance: string;
     photoUser: string;
     typeCompte: string;
     date_created: string;
     date_update: string;
-    token: string;
+    token?: string;
     pseudo_name: string;
   }
 
@@ -178,6 +256,7 @@ export class fondInvestorBis {
 
 export class ProjectModel {
         id: number;
+        created_at?: string;
         nom: string;
         description: string;
         _porte_project: PorteProjectModel;
@@ -194,6 +273,9 @@ export class ProjectModel {
         token: string;
         total_fonds: number;
         total_hearts: number;
+        total_like: number;
+        total_dislike: number;
+        total_vues: number;
   }
 
 
@@ -205,6 +287,8 @@ export class templteProjectModel {
                            favorisProject: number;
                            srcFavorisProject: string;
                            heartUser: string;
+                           likeUsers: string;
+                           dislikeUser: string;
   }
 
 export class QuestionRepProjectByUserForUserModelBis {
@@ -219,6 +303,7 @@ export class QuestionRepProjectByUserForUserModelBis {
 
 export class ProjectModelBis {
     id: number;
+    created_at?: string;
     nom: string;
     description: string;
     _porte_project: PorteProjectModel;
@@ -234,6 +319,10 @@ export class ProjectModelBis {
     token: string;
     total_fonds: number;
     total_hearts: number;
+    total_like: number;
+    total_dislike: number;
+    total_vues: number;
+
 }
 
 export class templteProjectModelBis {
@@ -243,6 +332,8 @@ export class templteProjectModelBis {
     favorisProject: number;
     srcFavorisProject: string;
     heartUser: string;
+    likeUsers: string;
+    dislikeUser: string;
 }
 
 

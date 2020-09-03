@@ -18,6 +18,9 @@ import { ProjectShowCompanyOwnerComponent } from './project-show-company-owner/p
 import { MyProjectShowCompanyOwnerComponent } from './my-project-show-company-owner/my-project-show-company-owner.component';
 import { MyFavorisProjectsCompanyOwnerComponent } from './my-favoris-projects-company-owner/my-favoris-projects-company-owner.component';
 import { MyContribProjectsComponent } from './my-contrib-projects/my-contrib-projects.component';
+// tslint:disable-next-line:max-line-length
+import { ListProjectsByFiltreByTagUserComponent } from './list-projects-by-filtre-by-tag-user/list-projects-by-filtre-by-tag-user.component';
+
 
 
 import { IdentificationAdminComponent } from './identification-admin/identification-admin.component';
@@ -26,7 +29,8 @@ import { ProjectsListAdminComponent } from './projects-list-admin/projects-list-
 import { ProjectShowAdminComponent } from './project-show-admin/project-show-admin.component';
 import { ListUsersAdminComponent } from './list-users-admin/list-users-admin.component';
 import {ShowProfilUserAdminComponent} from './show-profil-user-admin/show-profil-user-admin.component';
-
+// tslint:disable-next-line:max-line-length
+import { ListProjectsByFiltreByTagAdminComponent } from './list-projects-by-filtre-by-tag-admin/list-projects-by-filtre-by-tag-admin.component';
 
 
 
@@ -42,6 +46,7 @@ const routes: Routes = [
   { path: 'profilUser', component: ProfilUserComponent},
   { path: 'admin-login', component: IdentificationAdminComponent},
   { path: 'admin-projetcs', component: ProjectsListAdminComponent},
+  { path: 'admin-search-projetcs-by-tag', component: ListProjectsByFiltreByTagAdminComponent},
   { path: 'admin-users', component: ListUsersAdminComponent},
   { path: 'admin-profil-user/:token', component: ShowProfilUserAdminComponent},
   { path: 'admin-projetcs-show/:token', component: ProjectShowAdminComponent},
@@ -53,6 +58,7 @@ const routes: Routes = [
   { path: 'user-my-projetcs-show/:token', component: MyProjectShowCompanyOwnerComponent},
   { path: 'user-my-projetcs-edit/:token', component: ProjectEditCompanyOwnerComponent},
   { path: 'user-projetcs-show/:token', component: ProjectShowCompanyOwnerComponent},
+  { path: 'user-search-projetcs-by-tag', component: ListProjectsByFiltreByTagUserComponent},
 ];
 
 @NgModule({

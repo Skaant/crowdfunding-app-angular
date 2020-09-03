@@ -1,4 +1,5 @@
 import { Component, OnInit, ElementRef, ViewChild} from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import { CookieService } from 'ngx-cookie-service';
 import { Router, ActivatedRoute} from '@angular/router';
 import { ImageService } from './../image.service';
@@ -12,6 +13,8 @@ import {UserModel, ProjectModel, ProjectModelBis, templteProjectModelBis,
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import Swal from 'sweetalert2/dist/sweetalert2.js';
+
+
 
 declare var window: any;
 
@@ -90,9 +93,24 @@ export class ProjectEditCompanyOwnerComponent implements OnInit {
 
   public linkProject = '';
 
+  // tslint:disable-next-line:ban-types
+  public options: Object = {
+                         charCounterCount: true,
+                         attribution: false,
+                         placeholderText: 'Décrivez brièvement votre projet *',
+                         heightMin: 200
+  /*  toolbarButtons: ['bold', 'italic', 'underline', 'paragraphFormat', 'alert'],
+    toolbarButtonsXS: ['bold', 'italic', 'underline', 'paragraphFormat', 'alert'],
+    toolbarButtonsSM: ['bold', 'italic', 'underline', 'paragraphFormat', 'alert'],
+    toolbarButtonsMD: ['bold', 'italic', 'underline', 'paragraphFormat', 'alert'],*/
+  };
+
   constructor(private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute, private cookie: CookieService,
               private apiService: apiHttpSpringBootService, private ngxService: NgxUiLoaderService,
-              private datePipe: DatePipe, public sanitizer: DomSanitizer, private imageService: ImageService, ) {
+              private datePipe: DatePipe, public sanitizer: DomSanitizer,
+              private imageService: ImageService, private titleService: Title ) {
+
+              this.titleService.setTitle('editer-projet');
 
               if (this.cookie.get('infosUser')){
 
@@ -148,7 +166,7 @@ export class ProjectEditCompanyOwnerComponent implements OnInit {
 
     this.updateProjectForm = this.formBuilder.group({
                                                    nomProject: [ '', Validators.required],
-                                                   descriptionProject: ['', Validators.required],
+                                                  // descriptionProject: ['', Validators.required],
                                                    porteProject : ['', Validators.required],
                                                    categorieProject : ['', Validators.required],
                                                    // tslint:disable-next-line:max-line-length
@@ -336,11 +354,13 @@ export class ProjectEditCompanyOwnerComponent implements OnInit {
 
     // console.log('this.ObjetProject.contrePartieProject = ', this.ObjetProject.contrePartieProject);
 
+   console.log('this.ObjetProject.porteProject.id = ', this.ObjetProject._porte_project.id);
+
    if (this.ObjetProject.contrePartieProject  && this.isvalidCaptcha    &&  !this.checkContrePartie  && this.isValidDateCollecte){
 
       this.apiService.updateDataProjectByUser(this.ObjetProject).subscribe((data: any) => {
 
-
+        this.tinyAlert('Votre enregistrement a été éffectué par succées');
 
       }, (error: any) => { });
 
@@ -445,7 +465,7 @@ export class ProjectEditCompanyOwnerComponent implements OnInit {
 
     renderReCaptcha() {
       window.grecaptcha.render(this.recaptchaElement.nativeElement, {
-        sitekey : '6Lf4I6gZAAAAAMp1E9YI1FJghdQ20CNRtAV9d55y',
+        sitekey: '6Lf4I6gZAAAAAMp1E9YI1FJghdQ20CNRtAV9d55y',
         callback: (response) => {
             console.log('response', response);
 
@@ -596,10 +616,10 @@ export class ProjectEditCompanyOwnerComponent implements OnInit {
 
              this.linkProject = this.linkProject.replace('(+33)', '0');
 
-             //alert("toto");
+             // alert("toto");
           }
 
-          console.log("this.linkProject = ", this.linkProject);
+          console.log('this.linkProject = ', this.linkProject);
 
           const regexTel = new RegExp(/^(01|02|03|04|05|06|07|08|09)[0-9]{8}/g);
 
@@ -614,9 +634,9 @@ export class ProjectEditCompanyOwnerComponent implements OnInit {
             this.tinyAlert('Votre numero tel est invalide.exemple de saisie : 0685748546-bis');
 
           }
-        
 
-          /************************************************************************ */ 
+
+          /************************************************************************ */
 
        }
 
@@ -643,7 +663,7 @@ export class ProjectEditCompanyOwnerComponent implements OnInit {
           }, (error: any) => {
 
           });
-         
+
 
           console.log(objectLinkMedia);
 

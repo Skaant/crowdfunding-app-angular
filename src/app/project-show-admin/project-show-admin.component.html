@@ -47,15 +47,71 @@
                       <ng-template ngbTabContent>
                         <div class="row" style="margin-top:5%">
 
-                          <div class="col-lg-8">
+                          <!-------------------------------------------------------------------------------->
+
+                          <div class="col-lg-6">
 
                             <div class="col-lg-12" style="margin-top:5%">
 
                                 <div class="card  border-left-primary">
 
-                                    <div class="card-body">                                 
+                                    <div class="card-body"> 
+                                      
+                                     
+
+                                       
                                            
                                         <img mat-card-image [src]="ObjetProjectTemplate.project.afficheProject" alt="" style="text-align:center;margin-left:10%;width:50%;height :50%" > 
+
+                                        <table  style="margin-left: 25%;">
+
+                                          <tr>
+            
+                                            <td width="10%">                                
+            
+                                              <img class="card-img-top" src="./assets/img/heart-icon.png"  alt="" style="width :35px;height:35px;" >
+            
+                                              <span>{{ObjetProjectTemplate.project.total_hearts}}</span>
+            
+                                            </td>
+            
+                                            <td width="30%"  style="text-align: center;">                                
+            
+                                              <img class="card-img-top" src="./assets/img/like_ico.png"  alt="" style="width :35px;height:35px;" >
+            
+                                              <span>{{ObjetProjectTemplate.project.total_like}}</span>
+                                              
+                                            </td>
+            
+                                            <td width="20%">                                     
+            
+                                              <img class="card-img-top" src="./assets/img/dislike_ico.png"  alt="" style="width :35px;height:35px;" >
+            
+                                              <span>{{ObjetProjectTemplate.project.total_dislike}}</span>
+                                              
+                                            </td>
+            
+                                            <td width="20%">                                     
+            
+                                              <img class="card-img-top" src="./assets/img/eye_ico.png"  alt="" style="width :38px;height:35px;" >
+            
+                                              <span>{{ObjetProjectTemplate.project.total_vues}}</span>
+                                              
+                                            </td>
+            
+                                            <td width="20%">                                     
+            
+                                              <img class="card-img-top" src="./assets/img/picto-dons-300x300.png"  alt="" style="width :38px;height:35px;" >
+            
+                                              <span>{{ObjetProjectTemplate.project.total_fonds}} &euro;</span>
+                                              
+                                            </td>
+            
+                                          </tr>
+                                        </table>
+            
+
+                                       <!-- <p style="margin-left:91%;">2<img class="card-img-top" src="./assets/img/heart-icon.png"  alt="" style="width :35px;height:35px;margin-left:92%;" ></p>-->
 
                                     </div>
 
@@ -182,9 +238,13 @@
                             </div> 
                         </div>
 
-                        <div class="col-lg-4">
+                        <!-------------------------------------------------------------------------------->
+
+                        <div class="col-lg-6">
 
                            <div class="col-lg-12" *ngIf="showForValidation">
+
+                                <!-------------------------------------------------------------------------------->
 
                                 <div class="card mb-12 py-12 border-left-primary">
 
@@ -210,8 +270,45 @@
 
                             </div>  
 
+                             <!-------------------------------------------------------------------------------->
+
+                             <div class="card mb-12 py-12 border-left-primary" *ngIf="showActionCommision">
+
+                              <div class="card-body">
+
+                                <div>
+
+                                      <h3>{{montantCommision}}&euro;</h3>
+                                </div>
+
+                                <div>
+
+                                     <button class="btn  btn-primary" (click)="addCommisionProject()">
+                                  
+                                            Appliquer la commission (5%)
+                                      </button>
+                                 </div>
+
+                                </div>            
+                              
+                             
+
+                            </div>                   
+
+
+
+                              <!-------------------------------------------------------------------------------->
+
 
                         </div>
+
+                        <!-------------------------------------------------------------------------------->
+
+
+
+
+
+                         <!-------------------------------------------------------------------------------->
                         </div>    
                       </ng-template>
                     </ngb-tab>
@@ -307,7 +404,7 @@
                         
                       </ngb-tab> 
 
-                      <ngb-tab>
+                      <ngb-tab *ngIf="arrayAdressReseauxSociauxProject.length>0">
 
                         <ng-template ngbTabTitle>Contact</ng-template>
 
@@ -321,9 +418,34 @@
     
                                     <div class="card-body">                                 
                                            
-                                        <h3>{{objectAdresse.valueMedia}} : {{objectAdresse.linkProject}}</h3>
-
-                                                                      
+                                      <table>
+  
+                                        <tr>
+                                          <td>
+            
+                                            <h3 *ngIf="objectAdresse.keyMedia === 'num_tel'"><img  src="./assets/img/tel_ico.png"  style="width:30px"  /> {{objectAdresse.valueMedia}} : </h3> 
+            
+                                            <h3 *ngIf="objectAdresse.keyMedia === 'link_facbook'"><img  src="./assets/img/facebook_ico.png"  style="width:40px"  />{{objectAdresse.valueMedia}} : </h3> 
+            
+                                            <h3 *ngIf="objectAdresse.keyMedia === 'site_internet'"><img  src="./assets/img/site_web_ico.png"  style="width:40px"  />{{objectAdresse.valueMedia}} : </h3> 
+            
+                                            <h3 *ngIf="objectAdresse.keyMedia === 'link_youtube'"><img  src="./assets/img/youtube_ico.png"  style="width:40px"  />{{objectAdresse.valueMedia}} : </h3> 
+            
+                                            <h3 *ngIf="objectAdresse.keyMedia === 'link_google_plus'"><img  src="./assets/img/google_ico.png"  style="width:40px"  />{{objectAdresse.valueMedia}} : </h3> 
+            
+                                            <h3 *ngIf="objectAdresse.keyMedia === 'link_twitter'"><img  src="./assets/img/twitter_ico.png"  style="width:40px"  />{{objectAdresse.valueMedia}} : </h3> 
+            
+                                            
+            
+                                          </td>
+                                          <td>
+            
+                                                <h3>{{objectAdresse.linkProject}}</h3>
+                                          </td>                             
+            
+                                        </tr>
+                                        
+                                      </table>                                                                      
 
                                        
                                     </div>
@@ -645,6 +767,221 @@
 
                         </ng-template>
 
+                    </ngb-tab>
+
+                  <ngb-tab>
+
+                    <ng-template ngbTabTitle>Les news de projet</ng-template>
+
+                    <ng-template ngbTabContent>
+
+                      <div class="row" style="margin-top:2%;margin-left:5%;">
+
+
+                        <div class="col-lg-8" style="margin-top:5%">
+
+                          <h3>Les news de projet</h3>
+                          <ul class="list-group">
+                            <li class="list-group-item" *ngFor="let objectNews of listNewsProject; let i = index ">
+                              <div class="row">
+                                <div class="col-lg-2 col-xs-2 col-md-1">
+                                  <img [src]="objectNews.photos" class="img-circle img-responsive" style="width: 100%;"
+                                    alt="" />
+                                </div>
+                                <div class="col-lg-10 col-xs-10 col-md-11">
+                                  <div>
+                                    <a href="#">{{objectNews.titre}} </a>
+                                    <div class="mic-info">
+                                      {{objectNews.date_created}}
+                                    </div>
+                                  </div>
+                                  <div class="comment-text">
+                                    {{objectNews.description}}
+                                  </div>
+    
+                                </div>
+                              </div>
+                            </li>
+    
+    
+                          </ul>
+                        </div>
+
+
+                       </div>
+                       
+                    </ng-template>                   
+                    
+
+                  </ngb-tab>
+
+
+                  <ngb-tab>
+
+                      <ng-template ngbTabTitle>Les statistiques</ng-template>
+        
+                       <ng-template ngbTabContent>
+        
+                        <div class="row">
+
+                          <!--------------------------------------------------------------------->
+      
+                          <div class="row">
+      
+                            <div class="col-lg-12" style="margin-top:5%;margin-left:5%">
+      
+                              <div class="card  border-left-primary">
+                                <div class="card-body">
+                                  <div class="form-group">
+        
+                                    <select class="form-control" (change)="onChangeTypeStatistique($event.target.value)">
+        
+                                      <option value="">Selectionner type de statistique *</option>
+        
+                                      <option value="month">Des statistiques mensuelles</option>
+        
+                                      <option value="day">Des statistiques journaliere</option>
+        
+                                    </select>
+        
+        
+                                  </div>
+        
+        
+                                </div>
+                              </div>
+                            
+                            
+                            </div>
+      
+                      
+                            <div class="col-lg-12" style="margin-top:5%;margin-left:5%" *ngIf="isShowFormSelectDays">
+      
+                              <div class="card mb-12 py-12 border-left-primary">
+      
+                                <div class="card-body">
+          
+                                  <div class="form-group">
+        
+                                    <select class="form-control" [(ngModel)]="ObjetOptionStatMonth.year" >
+        
+                                      <option value="">Selectionner votre année *</option>
+        
+                                      <option [value]="annee"  *ngFor="let annee of listYearProject; let i = index ">{{annee}}</option>                             
+        
+                                    </select> 
+                           
+                                  
+          
+                                  </div>
+          
+          
+                                </div>
+      
+                            </div>
+      
+                            <div class="col-lg-12" style="margin-top:5%;margin-left:5%" *ngIf="isShowFormSelectDays">
+      
+                              <div class="card mb-12 py-12 border-left-primary">
+      
+                                <div class="card-body">
+          
+                                  <div class="form-group">
+          
+                                    <dp-date-picker  placeholder ="Mois"  [mode]="'month'"  [(ngModel)]="ObjetOptionStatMonth.month"  (onSelect)="onSelectMonthStatisMonth($event)" required="true"  [config]="datePickerConfigBis"></dp-date-picker>  
+          
+                                  </div>
+          
+          
+                                </div>
+          
+                              </div>
+      
+                            </div>
+      
+                            
+      
+                          </div>           
+      
+      
+      
+                      </div>
+                      
+                      
+                      <!--------------------------------------------------------------------->
+      
+                        </div>
+      
+                        <div id="statis_mens" *ngIf="isShowChartsMens">
+      
+                          <div class="chart-wrapper">
+                            <canvas baseChart [datasets]="barChartDataHearts" [labels]="barChartLabelsHearts"
+                              [options]="barChartOptions" [plugins]="barChartPlugins" [legend]="barChartLegend"
+                              [chartType]="barChartType">
+                            </canvas>
+                          </div>
+      
+                          <div class="chart-wrapper">
+                            <canvas baseChart [datasets]="barChartDataVues" [labels]="barChartLabelsVues"
+                              [options]="barChartOptions" [plugins]="barChartPlugins" [legend]="barChartLegend"
+                              [chartType]="barChartType">
+                            </canvas>
+                          </div>
+      
+                          <div class="chart-wrapper">
+                            <canvas baseChart [datasets]="barChartDataLikes" [labels]="barChartLabelsLikes"
+                              [options]="barChartOptions" [plugins]="barChartPlugins" [legend]="barChartLegend"
+                              [chartType]="barChartType">
+                            </canvas>
+                          </div>
+      
+                          <div class="chart-wrapper">
+                            <canvas baseChart [datasets]="barChartDataDislikes" [labels]="barChartLabelsDislikes"
+                              [options]="barChartOptions" [plugins]="barChartPlugins" [legend]="barChartLegend"
+                              [chartType]="barChartType">
+                            </canvas>
+                          </div>
+      
+      
+                        </div>
+      
+                        <div id="statis_day" *ngIf="isShowChartsDays">
+      
+                          <div class="chart-wrapper">
+                            <canvas baseChart [datasets]="barChartDataDaysHearts" [labels]="barChartLabelsDaysHearts"
+                              [options]="barChartOptions" [plugins]="barChartPlugins" [legend]="barChartLegend"
+                              [chartType]="barChartType">
+                            </canvas>
+                          </div>
+      
+                          <div class="chart-wrapper">
+                            <canvas baseChart [datasets]="barChartDataDaysVues" [labels]="barChartLabelsDaysVues"
+                              [options]="barChartOptions" [plugins]="barChartPlugins" [legend]="barChartLegend"
+                              [chartType]="barChartType">
+                            </canvas>
+                          </div>
+      
+                          <div class="chart-wrapper">
+                            <canvas baseChart [datasets]="barChartDataDaysLikes" [labels]="barChartLabelsDaysLikes"
+                              [options]="barChartOptions" [plugins]="barChartPlugins" [legend]="barChartLegend"
+                              [chartType]="barChartType">
+                            </canvas>
+                          </div>
+      
+                          <div class="chart-wrapper">
+                            <canvas baseChart [datasets]="barChartDataDaysDislikes" [labels]="barChartLabelsDaysDislikes"
+                              [options]="barChartOptions" [plugins]="barChartPlugins" [legend]="barChartLegend"
+                              [chartType]="barChartType">
+                            </canvas>
+                          </div>
+      
+      
+                          
+                        </div>
+      
+        
+                        </ng-template>
+        
                     </ngb-tab>
 
 

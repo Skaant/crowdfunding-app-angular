@@ -1,4 +1,5 @@
 import { Component, OnInit, ElementRef, ViewChild} from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import { CookieService } from 'ngx-cookie-service';
 import {Router} from '@angular/router';
 import { apiHttpSpringBootService } from './../api-spring-boot.service';
@@ -75,10 +76,26 @@ export class ProjectAddCompanyOwnerComponent implements OnInit {
 
      public checkContrePartie = false;
 
+     // tslint:disable-next-line:ban-types
+     public options: Object = {
+      charCounterCount: true,
+      attribution: false,
+      placeholderText: 'Décrivez brièvement votre projet *',
+      heightMin: 200
+    /*  toolbarButtons: ['bold', 'italic', 'underline', 'paragraphFormat', 'alert'],
+      toolbarButtonsXS: ['bold', 'italic', 'underline', 'paragraphFormat', 'alert'],
+      toolbarButtonsSM: ['bold', 'italic', 'underline', 'paragraphFormat', 'alert'],
+      toolbarButtonsMD: ['bold', 'italic', 'underline', 'paragraphFormat', 'alert'],*/
+    };
+
+    public srcImageAfficheProject = 'http://placehold.it/500x325';
+
 
      constructor(private formBuilder: FormBuilder, private router: Router, private cookie: CookieService,
                  private apiService: apiHttpSpringBootService, private imageService: ImageService,
-                 private ngxService: NgxUiLoaderService, private datePipe: DatePipe) {
+                 private ngxService: NgxUiLoaderService, private datePipe: DatePipe, private titleService: Title) {
+
+                  this.titleService.setTitle('ajouter un projet');
 
                   if (this.cookie.get('infosUser')){
 
@@ -123,7 +140,8 @@ export class ProjectAddCompanyOwnerComponent implements OnInit {
                   }
 
 
-       }
+  }
+
   tinyAlert(message: string){
 
         Swal.fire(message);
@@ -173,7 +191,7 @@ export class ProjectAddCompanyOwnerComponent implements OnInit {
 
   renderReCaptcha() {
     window.grecaptcha.render(this.recaptchaElement.nativeElement, {
-      sitekey : '6Lf4I6gZAAAAAMp1E9YI1FJghdQ20CNRtAV9d55y',
+      sitekey: '6Lf4I6gZAAAAAMp1E9YI1FJghdQ20CNRtAV9d55y',
       callback: (response) => {
           console.log('response', response);
 
@@ -569,9 +587,6 @@ deleteMediaByProject(indexObjectAdresse , objectAdresse){
     }
 
 
-
-
-
   }
 
 
@@ -593,6 +608,8 @@ deleteMediaByProject(indexObjectAdresse , objectAdresse){
       console.log(imageData.data.link);
 
       this.ObjetProject.afficheProject = imageData.data.link;
+
+      this.srcImageAfficheProject = imageData.data.link;
 
       this.ngxService.stop();
 

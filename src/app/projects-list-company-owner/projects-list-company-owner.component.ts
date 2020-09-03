@@ -37,6 +37,8 @@ export class ProjectsListCompanyOwnerComponent implements OnInit {
 
   public listeStatusProject: Array<StatutProjectModel> = [];
 
+  public tagSearch = '';
+
   constructor(private router: Router, private cookie: CookieService, private apiService: apiHttpSpringBootService
     // tslint:disable-next-line:align
     , private ngxService: NgxUiLoaderService, private datePipe: DatePipe) {
@@ -323,15 +325,15 @@ addHeartProject(indexProject, project){
 
 }
 
-addHeartProjectForBdd(indexProject){
+addHeartProjectForBdd(indexProject): void{
 
-  console.log("indexProject = ", indexProject);
+  console.log('indexProject = ', indexProject);
 
   this.ngxService.start();
 
   const date = new Date();
 
-  console.log("this.listProjects[indexProject] = ", this.listProjects[indexProject]);
+  console.log('this.listProjects[indexProject] = ', this.listProjects[indexProject]);
 
   this.objectHeartProject._project = this.listProjects[indexProject];
 
@@ -355,6 +357,8 @@ addHeartProjectForBdd(indexProject){
 
     this.listtemplateProjects[indexProject].heartUser = './assets/img/heart-icon.png';
 
+    this.updateDataProject(indexProject);
+
     this.ngxService.stop();
 
   }, (error: any) => {
@@ -377,6 +381,8 @@ deleteHeartProjectForBdd(indexProject){
 
 
     this.listtemplateProjects[indexProject].heartUser = './assets/img/heart-icon-bis.png';
+
+    this.updateDataProject(indexProject);
 
     this.ngxService.stop();
 
@@ -566,6 +572,28 @@ checkFavorisProject(indexProject){
 
   }
 
+  searchProjectsByMotCle(){
+
+
+       this.listProjects = this.listProjectsTemp ;
+
+       console.log(this.listProjects.length);
+
+
+       console.log('tagSearch =', this.tagSearch);
+
+       const tagSearch = this.tagSearch;
+
+       // tslint:disable-next-line:only-arrow-functions
+       this.listProjects =  this.listProjects.filter(function(project: ProjectModel ) {
+
+          return (project.nom.indexOf(tagSearch) > -1 ||  project.description.indexOf(tagSearch) > -1);
+
+       });
+
+  }
+
+
   formaterListProject() {
 
     // tslint:disable-next-line:prefer-for-of
@@ -631,6 +659,21 @@ checkFavorisProject(indexProject){
 
 
   }
+
+  updateDataProject(indexProject){
+
+
+    this.apiService.getDataProject(this.listProjects[indexProject].token).subscribe((dataPorject: ProjectModel) => {
+
+      this.listProjects[indexProject] = dataPorject;
+
+
+    }, (error: any) => {
+
+
+     });
+
+ }
 
 
 }

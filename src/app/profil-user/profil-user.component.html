@@ -55,7 +55,7 @@
                 <div class="card mb-4 py-3 border-left-primary">
                     <div class="card-body">
                         <div class="form-group">
-                            <label>Votre nom : </label>
+                            <label>{{'nom_label' | translate}} : </label>
                             <input type="text" class="form-control" [(ngModel)] = "ObjetUpdateProfil.nom" name = "nom" placeholder="votre nom *" required value="" />
                         </div>
                     </div>
@@ -114,8 +114,8 @@
                 <strong>Erreur!</strong>  Veuillez valider votre captcha
              </div>
 
-                  <div class="form-group">
-                    <button type="submit" class="btn btn-facebook btn-block" [disabled]="!updateProfilForm.form.valid">Mettre a jour votre profil</button>                   
+                 <div class="form-group">
+                    <button type="submit" class="btn btn-primary btn-block" [disabled]="!updateProfilForm.form.valid">Mettre a jour votre profil</button>                   
                 </div>
                 
                 </form>

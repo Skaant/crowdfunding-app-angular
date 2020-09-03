@@ -5,6 +5,7 @@ import { apiHttpSpringBootService } from './../api-spring-boot.service';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { DatePipe } from '@angular/common';
 import {UserModel, ProjectModel, templteProjectModel, StatutProjectModel, CategorieProjectModel, PorteProjectModel} from '../interfaces/models';
+import { Observable } from 'rxjs';
 
 
 
@@ -34,6 +35,8 @@ export class ProjectsListAdminComponent implements OnInit {
   public listeStatusProject: Array<StatutProjectModel> = [];
 
   public listProjectsTemp: Array<ProjectModel> = [];
+
+  public tagSearch = '';
 
   constructor(private router: Router, private cookie: CookieService, private apiService: apiHttpSpringBootService
     ,         private ngxService: NgxUiLoaderService, private datePipe: DatePipe) {
@@ -104,6 +107,27 @@ export class ProjectsListAdminComponent implements OnInit {
   }
 
   ngOnInit(): void { }
+
+  searchProjectsByMotCle(){
+
+
+    this.listProjects = this.listProjectsTemp ;
+
+    console.log(this.listProjects.length);
+
+
+    console.log('tagSearch =', this.tagSearch);
+
+    const tagSearch = this.tagSearch;
+
+    // tslint:disable-next-line:only-arrow-functions
+    this.listProjects =  this.listProjects.filter(function(project: ProjectModel ) {
+
+       return (project.nom.indexOf(tagSearch) > -1 ||  project.description.indexOf(tagSearch) > -1);
+
+    });
+
+}
 
   onChangePorteProject(index){
 

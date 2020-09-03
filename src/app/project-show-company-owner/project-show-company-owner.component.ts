@@ -7,10 +7,12 @@ import { DatePipe } from '@angular/common';
 import { DomSanitizer } from '@angular/platform-browser';
 import {UserModel, ProjectModel, ProjectModelBis, templteProjectModelBis,
        ImageProjectModel, AdressReseauxSociauxProjectModel, commentProjectModel, commentProjectModelBis,
-       QuestionRepProjectByUserForUserModelBis, InvestiteurProjectModelBis,
-       QuestionRepProjectByUserForUserModel, fondInvestorBis, HeartProjectUserModel, FavorisProjectUserModel} from '../interfaces/models';
+       QuestionRepProjectByUserForUserModelBis, InvestiteurProjectModelBis, LikeProjectUserModel, VueProjectUserModel,
+       QuestionRepProjectByUserForUserModel, fondInvestorBis, HeartProjectUserModel, FavorisProjectUserModel, NewsProjectModel} from '../interfaces/models';
 
 import { IPayPalConfig, ICreateOrderRequest } from 'ngx-paypal';
+
+import { IpServiceService } from './../ip-service.service';
 
 
 declare var window: any;
@@ -94,9 +96,17 @@ export class ProjectShowCompanyOwnerComponent implements OnInit {
 
    public objectHeartProject: HeartProjectUserModel = new HeartProjectUserModel();
 
+   public objectLikeProject: LikeProjectUserModel = new LikeProjectUserModel();
+
+   public objectVueProject: VueProjectUserModel = new VueProjectUserModel();
+
+   public ipAdress = '';
+
+   public listNewsProject: Array<NewsProjectModel> = [];
+
    constructor(private router: Router, private route: ActivatedRoute, private cookie: CookieService,
                private apiService: apiHttpSpringBootService, private ngxService: NgxUiLoaderService,
-               private datePipe: DatePipe, public sanitizer: DomSanitizer) {
+               private datePipe: DatePipe, public sanitizer: DomSanitizer, private ip: IpServiceService) {
 
                if (this.cookie.get('infosUser')){
 
@@ -123,7 +133,9 @@ export class ProjectShowCompanyOwnerComponent implements OnInit {
 
                   this.route.params.subscribe(params => {
 
-                    this.getinfosProject(params.token);
+
+
+                     this.getinfosProject(params.token);
 
 
 
@@ -142,7 +154,453 @@ export class ProjectShowCompanyOwnerComponent implements OnInit {
 
    }
 
-   ngOnInit(): void {}
+   ngOnInit(): void {
+
+      this.getIP();
+   }
+
+   getListNewsProject(){
+
+
+      this.listNewsProject = [];
+
+      this.apiService.getListNewsProjectByUser(this.ObjetProjectTemplate.project).subscribe((arrayNewsProject: Array<NewsProjectModel>) => {
+
+
+         this.listNewsProject = arrayNewsProject;
+
+         // tslint:disable-next-line:prefer-for-of
+         for (let index = 0; index < this.listNewsProject.length; index++) {
+
+            this.listNewsProject[index].description = this.listNewsProject[index].description.substr(3);
+
+            // tslint:disable-next-line:max-line-length
+            this.listNewsProject[index].description = this.listNewsProject[index].description.substr(0, this.listNewsProject[index].description.length - 4);
+
+
+         }
+
+         this.listNewsProject = this.listNewsProject.sort((c1, c2) => c2.timestamp - c1.timestamp);
+
+
+      }, (error: any) => { });
+
+   }
+
+   getIP() {
+
+    this.ip.getIPAddress().subscribe((res: any) => {
+
+      console.log('infos-ip = ', res.ip) ;
+
+      this.ipAdress =  res.ip;
+
+      this.objectVueProject.ip_adress = res.ip;
+
+    });
+
+  }
+
+  checkVueProject(){
+
+
+    // tslint:disable-next-line:max-line-length
+    this.apiService.checkVueProjectByUser(this.ObjetProjectTemplate.project, this.infosUser).subscribe((dataVue: Array<VueProjectUserModel>) => {
+
+      if (dataVue){
+
+         console.log('dataVue = ', dataVue[0]);
+
+         this.updateVueProject(dataVue[0]);
+
+      }
+
+
+      }, (error: any) => {
+
+         this.addVueProjectForBdd();
+      });
+  }
+
+  addVueProjectForBdd(){
+
+   const date = new Date();
+
+   this.objectVueProject._project = this.ObjetProjectTemplate.project;
+
+   this.objectVueProject._user = this.infosUser;
+
+   this.objectVueProject.date_consultation = date.toLocaleString('fr-FR', {
+                                                              weekday: 'long',
+                                                              year: 'numeric',
+                                                              month: 'long',
+                                                              day: 'numeric',
+                                                              hour: 'numeric',
+                                                              minute: 'numeric',
+                                                              second: 'numeric',
+    });
+
+   this.objectVueProject.date_created = date.toLocaleString('fr-FR', {
+                                                                   weekday: 'long',
+                                                                   year: 'numeric',
+                                                                   month: 'long',
+                                                                   day: 'numeric',
+                                                                   hour: 'numeric',
+                                                                   minute: 'numeric',
+                                                                   second: 'numeric',
+     });
+
+   this.objectVueProject.timestamp = Date.now();
+
+   this.apiService.addVueProjectByUser(this.objectVueProject).subscribe((dataVue: VueProjectUserModel) => {
+
+      /*********************** Mettre a jour les donnes de la template projet********************************** */
+
+
+      this.UpdateDataProject(this.ObjetProject.token);
+
+       /********************************************************************************************************** */
+
+      this.ngxService.stop();
+
+   }, (error: any) => {
+
+     this.ngxService.stop();
+   });
+
+
+
+  }
+
+  updateVueProject(dataVue: VueProjectUserModel){
+
+   const date = new Date();
+
+   dataVue.date_update = date.toLocaleString('fr-FR', {
+                                                                     weekday: 'long',
+                                                                     year: 'numeric',
+                                                                     month: 'long',
+                                                                     day: 'numeric',
+                                                                     hour: 'numeric',
+                                                                     minute: 'numeric',
+                                                                     second: 'numeric',
+     });
+
+   dataVue.ip_adress = this.ipAdress;
+
+   this.apiService.updateVueProjectByUser(dataVue).subscribe((data: VueProjectUserModel) => {
+
+
+      /*********************** Mettre a jour les donnes de la template projet********************************** */
+
+
+
+      this.UpdateDataProject(this.ObjetProject.token);
+
+    /********************************************************************************************************** */
+
+
+
+   }, (error: any) => {  });
+
+
+
+  }
+
+   checkLikeProject(paramAction){
+
+
+      this.ObjetProjectTemplate.likeUsers = './assets/img/like-bis.png';
+
+
+      this.ObjetProjectTemplate.dislikeUser = './assets/img/dislike-bis.png';
+
+
+      // tslint:disable-next-line:max-line-length
+      this.apiService.checkLikeDislikeProjectByUser(this.ObjetProjectTemplate.project, this.infosUser).subscribe((dataLike: Array<LikeProjectUserModel>) => {
+
+         if (dataLike){
+
+            console.log('dataLike = ', dataLike[0]);
+
+            if (paramAction.update === true){
+
+                this.updateLikeProject(paramAction, dataLike[0]);
+
+
+            }else{
+
+                  if (dataLike[0].statut_like_project === 'LIKE'){
+
+                     this.ObjetProjectTemplate.likeUsers = './assets/img/like_ico.png';
+
+                  }
+
+                  if (dataLike[0].statut_like_project === 'DISLIKE'){
+
+                     this.ObjetProjectTemplate.dislikeUser = './assets/img/dislike_ico.png';
+
+                  }
+
+            }
+
+
+
+         }
+
+    }, (error: any) => {
+
+         if (paramAction.update === true){
+
+              this.addLikeProjectForBdd(paramAction);
+         }
+     });
+
+
+  }
+
+  updateLikeProject(paramAction, dataLike: LikeProjectUserModel){
+
+        // console.log('dataLike.statut_like_project =', dataLike.statut_like_project);
+
+        // console.log('dataLike =', dataLike);
+
+        // alert('dataLike-statut =' + dataLike.statut_like_project);
+
+        const statutLike: string = dataLike.statut_like_project;
+
+        if (statutLike === 'LIKE'){
+
+             // alert('toto1');
+
+
+             if (paramAction.statutLike === 'LIKE'){
+
+                    // supprimer le like de Bdd
+
+                     // alert('LIKE+remove');
+
+                     this.removeLikeProjectForBdd(paramAction, dataLike);
+
+             }
+
+             if (paramAction.statutLike === 'DISLIKE'){
+
+               // Mettre a jour  le like de Bdd
+
+               // alert('DISLIKE+update');
+
+               this.updateLikeProjectForBdd(paramAction, dataLike);
+
+             }
+
+
+
+        }
+
+        if (statutLike === 'DISLIKE'){
+
+         // alert('toto2');
+
+         if (paramAction.statutLike === 'LIKE'){
+
+            // Mettre a jour  le like de Bdd
+
+            // alert('LIKE+update');
+
+            this.updateLikeProjectForBdd(paramAction, dataLike);
+
+         }
+
+         if (paramAction.statutLike === 'DISLIKE'){
+
+            // supprimer le like de Bdd
+
+            // alert('DISLIKE+delete');
+
+            this.removeLikeProjectForBdd(paramAction, dataLike);
+
+         }
+
+
+
+        }
+
+
+  }
+
+  updateLikeProjectForBdd(paramAction, dataLike: LikeProjectUserModel){
+
+       const date = new Date();
+
+       dataLike.date_update = date.toLocaleString('fr-FR', {
+         weekday: 'long',
+         year: 'numeric',
+         month: 'long',
+         day: 'numeric',
+         hour: 'numeric',
+         minute: 'numeric',
+         second: 'numeric',
+       });
+
+       dataLike.timestamp = Date.now();
+
+       dataLike.statut_like_project = paramAction.statutLike;
+
+       this.apiService.updateLikeProjectByUser(dataLike).subscribe((data: LikeProjectUserModel) => {
+
+         if (paramAction.statutLike === 'DISLIKE'){
+
+            // Mettre a jour  le like de Bdd
+
+            this.ObjetProjectTemplate.likeUsers = './assets/img/like-bis.png';
+
+            this.ObjetProjectTemplate.dislikeUser = './assets/img/dislike_ico.png';
+
+          }
+
+         if (paramAction.statutLike === 'LIKE'){
+
+            // Mettre a jour  le like de Bdd
+
+            this.ObjetProjectTemplate.likeUsers = './assets/img/like_ico.png';
+
+            this.ObjetProjectTemplate.dislikeUser = './assets/img/dislike-bis.png';
+
+         }
+
+         /*********************** Mettre a jour les donnes de la template projet********************************** */
+
+         this.UpdateDataProject(this.ObjetProject.token);
+
+       /********************************************************************************************************** */
+
+
+
+
+         this.ngxService.stop();
+
+      }, (error: any) => {
+
+        this.ngxService.stop();
+      });
+
+
+
+
+
+  }
+
+  removeLikeProjectForBdd(paramAction, dataLike: LikeProjectUserModel){
+
+   this.apiService.deleteLikeProjectByUser(dataLike).subscribe((data: any) => {
+
+      if (paramAction.statutLike === 'LIKE'){
+
+         this.ObjetProjectTemplate.likeUsers = './assets/img/like-bis.png';
+
+         this.ObjetProjectTemplate.dislikeUser = './assets/img/dislike-bis.png';
+
+       }
+
+      if (paramAction.statutLike === 'DISLIKE'){
+
+         // supprimer le like de Bdd
+
+         this.ObjetProjectTemplate.likeUsers = './assets/img/like-bis.png';
+
+         this.ObjetProjectTemplate.dislikeUser = './assets/img/dislike-bis.png';
+
+      }
+
+      /*********************** Mettre a jour les donnes de la template projet********************************** */
+
+
+      this.UpdateDataProject(this.ObjetProject.token);
+
+       /********************************************************************************************************** */
+
+      this.ngxService.stop();
+
+   }, (error: any) => {
+
+     this.ngxService.stop();
+   });
+
+
+  }
+
+  addLikeProjectForBdd(paramAction){
+
+   const date = new Date();
+
+   this.objectLikeProject._project = this.ObjetProjectTemplate.project;
+
+   this.objectLikeProject._user = this.infosUser;
+
+   this.objectLikeProject.date_created = date.toLocaleString('fr-FR', {
+                                                              weekday: 'long',
+                                                              year: 'numeric',
+                                                              month: 'long',
+                                                              day: 'numeric',
+                                                              hour: 'numeric',
+                                                              minute: 'numeric',
+                                                              second: 'numeric',
+    });
+
+   this.objectLikeProject.timestamp = Date.now();
+
+
+   this.objectLikeProject.statut_like_project = paramAction.statutLike;
+
+   this.apiService.addLikeProjectByUser(this.objectLikeProject).subscribe((data: LikeProjectUserModel) => {
+
+
+      if (paramAction.statutLike === 'LIKE'){
+
+         this.ObjetProjectTemplate.likeUsers = './assets/img/like_ico.png';
+      }
+
+      if (paramAction.statutLike === 'DISLIKE'){
+
+           this.ObjetProjectTemplate.dislikeUser = './assets/img/dislike_ico.png';
+      }
+
+      /*********************** Mettre a jour les donnes de la template projet********************************** */
+
+
+      this.UpdateDataProject(this.ObjetProject.token);
+
+       /********************************************************************************************************** */
+
+      this.ngxService.stop();
+
+   }, (error: any) => {
+
+     this.ngxService.stop();
+   });
+
+
+
+  }
+
+   addLikeProject(){
+
+      const paramAction = {update : true, statutLike : 'LIKE'};
+
+      this.checkLikeProject(paramAction);
+
+
+
+   }
+
+   addDislikeProject(){
+
+       const paramAction = {update : true, statutLike : 'DISLIKE'};
+
+       this.checkLikeProject(paramAction);
+
+   }
 
    addHeartProject(){
 
@@ -254,6 +712,7 @@ export class ProjectShowCompanyOwnerComponent implements OnInit {
 
 
 
+
    checkHeartsProject(paramAction){
 
       this.ObjetProjectTemplate.heartUser = './assets/img/heart-icon-bis.png';
@@ -313,6 +772,10 @@ export class ProjectShowCompanyOwnerComponent implements OnInit {
 
       this.ObjetProjectTemplate.heartUser = './assets/img/heart-icon.png';
 
+
+
+      this.UpdateDataProject(this.ObjetProject.token);
+
       this.ngxService.stop();
 
    }, (error: any) => {
@@ -336,6 +799,9 @@ export class ProjectShowCompanyOwnerComponent implements OnInit {
 
       this.ObjetProjectTemplate.heartUser = './assets/img/heart-icon-bis.png';
 
+
+      this.UpdateDataProject(this.ObjetProject.token);
+
       this.ngxService.stop();
 
  }, (error: any) => {
@@ -346,21 +812,58 @@ export class ProjectShowCompanyOwnerComponent implements OnInit {
 
  }
 
+   UpdateDataProject(tokenProject){
+
+
+      this.apiService.getDataProject(tokenProject).subscribe((dataPorject: ProjectModelBis) => {
+
+         this.ObjetProjectTemplate.project = dataPorject;
+
+         this.ObjetProject = dataPorject;
+
+
+
+      }, (error: any) => {
+
+
+       });
+
+   }
+
    getinfosProject(tokenProject) {
 
-      this.ngxService.start();
 
-      const paramAction = {update : false};
+         this.ngxService.start();
 
-      this.apiService.getDataProject(tokenProject).subscribe((dataPorject: ProjectModel) => {
+         const paramAction = {update: false};
+
+         this.apiService.getDataProject(tokenProject).subscribe((dataPorject: ProjectModelBis) => {
 
            console.log('dataPorject = ', dataPorject);
 
            this.ObjetProjectTemplate.project = dataPorject;
 
+           this.ObjetProject = dataPorject;
+
+           if (this.ObjetProjectTemplate.project.description.indexOf('<p>') >= 0){
+
+            this.ObjetProjectTemplate.project.description = this.ObjetProjectTemplate.project.description.substr(3);
+
+          }
+
+           if (this.ObjetProjectTemplate.project.description.indexOf('</p>') >= 0){
+
+            // tslint:disable-next-line:max-line-length
+            this.ObjetProjectTemplate.project.description = this.ObjetProjectTemplate.project.description.substring(0, this.ObjetProjectTemplate.project.description.length - 4 );
+          }
+
            this.checkHeartsProject(paramAction);
 
            this.checkFavorisProject(paramAction);
+
+           this.checkLikeProject(paramAction);
+
+           this.checkVueProject();
 
            this.checkInvestiteurProject();
 
@@ -376,6 +879,7 @@ export class ProjectShowCompanyOwnerComponent implements OnInit {
 
            this.getAllFondsInvest();
 
+           this.getListNewsProject();
 
            /******************************************** */
 
@@ -401,6 +905,8 @@ export class ProjectShowCompanyOwnerComponent implements OnInit {
          /******************************************* */
 
            this.ngxService.stop();
+
+
 
 
       }, (error: any) => {
@@ -802,7 +1308,7 @@ export class ProjectShowCompanyOwnerComponent implements OnInit {
 
       this.ObjetDemandeInvest.timestamp = Date.now();
 
-      this.apiService.sendDemandeInvestorByProject(this.ObjetDemandeInvest).subscribe((dataSend: any) => {
+      this.apiService.sendDemandeInvestorByProject(this.infosUser,  this.ObjetDemandeInvest).subscribe((dataSend: any) => {
 
          console.log(dataSend);
 
@@ -933,7 +1439,7 @@ export class ProjectShowCompanyOwnerComponent implements OnInit {
       this.objectQuestionRepProjectByUserForUserModel._userDest = this.ObjetProjectTemplate.project._user;
 
       // tslint:disable-next-line:max-line-length
-      this.apiService.createQuestionReponsesByUserForUser(this.objectQuestionRepProjectByUserForUserModel).subscribe((dataQuestion: any) => {
+      this.apiService.createQuestionReponsesByUserForUser(this.infosUser, this.objectQuestionRepProjectByUserForUserModel).subscribe((dataQuestion: any) => {
 
          // console.log(_dataQuestion);
 

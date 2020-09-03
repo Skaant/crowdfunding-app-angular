@@ -58,6 +58,26 @@
                 </canvas>
               </div> 
 
+              <div class="chart-wrapper">
+                <canvas baseChart 
+                    [datasets]="lineChartData" 
+                    [labels]="lineChartLabels" 
+                    [options]="lineChartOptions"
+                    [colors]="lineChartColors" 
+                    [legend]="lineChartLegend" 
+                    [chartType]="lineChartType" 
+                    [plugins]="lineChartPlugins">
+                </canvas>
+            </div>
+
+            <div class="chart-wrapper">
+              <canvas baseChart 
+              [data]="doughnutChartData"
+              [labels]="doughnutChartLabels"
+              [chartType]="doughnutChartType">
+            </canvas>
+          </div>
+
 
                 <table class="table table-striped"  style="margin-top:10%;margin-left:10%;width:100%" *ngIf="users.length>0">
                     <thead>

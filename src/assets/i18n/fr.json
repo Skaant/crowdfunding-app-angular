@@ -1,4 +1,27 @@
 {
-    "accueil_h1":"Un accueil chaleureux!",
-    "nom_label":"Votre nom"
+    "accueil_h1": "Bienvenu sur Lend Me, premier site de crowdfunding multiculturel",
+
+    "profil_user_nom_label": "Votre nom",
+    "profil_user_prenom_label": "Votre prénom",
+    "profil_user_mail_label": "Votre adresse e-mail",
+    "profil_user_sexe_label": "Votre sexe",
+    "profil_user_mdp_label": "Votre mot de passe",
+    "profil_user_img_label": "Image profil",
+    "profil_user_span_text_label": "Modifier",
+
+    "profil_user_button_btnbtnprimarybtnblock": "Mettre à jour votre profil",
+    "profil_user_div_alertalertdanger": "Modifier",
+
+    "profil_user_div_alertalertdanger_strong1": "Erreur!",
+
+    "identification_h3": "Identification",
+    "identification_alert_alert_danger": "identification",
+    "identification_alert_alert_danger_strong_erreur": "Erreur!",
+    "identification_login": "Se connecter",
+    "identification_forget_mdp": "Mot de passe oublié ?",
+
+    "templates_user_side_bar_lef_templates_sidebar_brand_text_mx_3": "ESPACE MEMBRE"
+
+
+
 }

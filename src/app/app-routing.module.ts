@@ -20,7 +20,7 @@ import { MyFavorisProjectsCompanyOwnerComponent } from './my-favoris-projects-co
 import { MyContribProjectsComponent } from './my-contrib-projects/my-contrib-projects.component';
 // tslint:disable-next-line:max-line-length
 import { ListProjectsByFiltreByTagUserComponent } from './list-projects-by-filtre-by-tag-user/list-projects-by-filtre-by-tag-user.component';
-
+import { ListMessagerieUserComponent } from './list-messagerie-user/list-messagerie-user.component';
 
 
 import { IdentificationAdminComponent } from './identification-admin/identification-admin.component';
@@ -59,6 +59,7 @@ const routes: Routes = [
   { path: 'user-my-projetcs-edit/:token', component: ProjectEditCompanyOwnerComponent},
   { path: 'user-projetcs-show/:token', component: ProjectShowCompanyOwnerComponent},
   { path: 'user-search-projetcs-by-tag', component: ListProjectsByFiltreByTagUserComponent},
+  { path: 'user-messagerie', component: ListMessagerieUserComponent},
 ];
 
 @NgModule({

@@ -12,14 +12,7 @@
     "profil_user_button_btnbtnprimarybtnblock": "Update your profile",
     "profil_user_div_alertalertdanger": "Modify",
 
-    "profil_user_div_alertalertdanger_strong": "Error!",
-
-    "identification_h3": "Identification",
-    "identification_login": "Login",
-    "identification_forget_mdp": "Forget Password?",
-
-    "templates_user_side_bar_lef_templates_sidebar_brand_text_mx_3": "ESPACE MEMBRE"
-    
+    "profil_user_div_alertalertdanger_strong": "Error!"
 
 
 }

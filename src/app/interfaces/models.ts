@@ -113,7 +113,24 @@ export class LikeProjectUserModel {
   _user: UserModel;
 }
 
-
+export class MessageInterneModel {
+  id: number;
+  token: string;
+  bodyMessage: string;
+  dateCreated: string;
+  timestamp: number;
+  _tokenProject: string;
+  _nomUserExp: string;
+  _nomUserDest: string;
+  _photoUserExp: string;
+  _photoUserDest: string;
+  _tokenUserExp: string;
+  _tokenUserDest: string;
+  statutExp: string;
+  statutDest: string;
+  timestampConsultation: number;
+  dateConsultation: string;
+}
 
 export class QuestionRepProjectByAdminForUserModel {
   id: number;

@@ -1247,6 +1247,29 @@ getStatustiquesDislikeDaysChart(){
 
       this.objectQuestionRepProjectByUserForUserModel.timestamp = Date.now();
 
+      /****************************************************************************** */
+
+      // tslint:disable-next-line:max-line-length
+      if (this.objectQuestionRepProjectByUserForUserModel._userDest.photoUser === ''  || !this.objectQuestionRepProjectByUserForUserModel._userDest.photoUser) {
+
+         if (this.objectQuestionRepProjectByUserForUserModel._userDest.sex === 'F') {
+
+            this.objectQuestionRepProjectByUserForUserModel._userDest.photoUser = './assets/img/users/user_f.png';
+
+
+         }
+
+         if (this.objectQuestionRepProjectByUserForUserModel._userDest.sex === 'H') {
+
+            this.objectQuestionRepProjectByUserForUserModel._userDest.photoUser = './assets/img/users/user_m.png';
+
+
+         }
+
+      }
+
+       /****************************************************************************** */
+
 
       this.objectQuestionRepProjectByUserForUserModel._userExp = this.infosUser;
 

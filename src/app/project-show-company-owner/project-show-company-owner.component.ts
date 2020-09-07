@@ -1436,6 +1436,28 @@ export class ProjectShowCompanyOwnerComponent implements OnInit {
 
       this.objectQuestionRepProjectByUserForUserModel._userExp = this.infosUser;
 
+      /****************************************************************************** */
+
+      if (this.ObjetProjectTemplate.project._user.photoUser === ''  || !this.ObjetProjectTemplate.project._user.photoUser) {
+
+         if (this.ObjetProjectTemplate.project._user.sex === 'F') {
+
+            this.ObjetProjectTemplate.project._user.photoUser = './assets/img/users/user_f.png';
+
+
+         }
+
+         if (this.ObjetProjectTemplate.project._user.sex === 'H') {
+
+            this.ObjetProjectTemplate.project._user.photoUser = './assets/img/users/user_m.png';
+
+
+         }
+
+      }
+
+       /****************************************************************************** */
+
       this.objectQuestionRepProjectByUserForUserModel._userDest = this.ObjetProjectTemplate.project._user;
 
       // tslint:disable-next-line:max-line-length
@@ -1484,6 +1506,24 @@ export class ProjectShowCompanyOwnerComponent implements OnInit {
          if (dataQuestion[index]._userExp.sex === 'H') {
 
             dataQuestion[index]._userExp.photoUser = './assets/img/users/user_m.png';
+
+
+         }
+
+      }
+
+      if (dataQuestion[index]._userDest.photoUser === ''  || !dataQuestion[index]._userDest.photoUser) {
+
+         if (dataQuestion[index]._userDest.sex === 'F') {
+
+            dataQuestion[index]._userDest.photoUser = './assets/img/users/user_f.png';
+
+
+         }
+
+         if (dataQuestion[index]._userDest.sex === 'H') {
+
+            dataQuestion[index]._userDest.photoUser = './assets/img/users/user_m.png';
 
 
          }

@@ -42,7 +42,7 @@
             <div class="row">
 
 
-              <!--------------------------------------------------------------------------------------------------------->
+              <!---------------------------------------------------------------------------------------------------------->
 
               <div class="col-lg-6 mb-4">
 
@@ -52,7 +52,7 @@
 
               <form [formGroup]="addProjectForm" (ngSubmit)="onFormSubmitAddProject()">
 
-                  <!--------------------------------------------------------------------->                
+                  <!---------------------------------------------------------------------->                
 
                 <div class="card mb-4 py-3 border-left-primary">
                   <div class="card-body">
@@ -68,7 +68,7 @@
                   </div>
                 </div>
 
-                <!--------------------------------------------------------------------->              
+                <!---------------------------------------------------------------------->              
 
                 <div class="card mb-4 py-3 border-left-primary">
                   <div class="card-body">
@@ -76,9 +76,9 @@
 
                       
 
-                     <div [froalaEditor]="options" [(froalaModel)]="ObjetProject.description"  formControlName="descriptionProject"  [ngClass]="{ 'is-invalid': submitted && f.descriptionProject.errors }"></div>
+                    <!-- <div [froalaEditor]="options" [(froalaModel)]="ObjetProject.description"  formControlName="descriptionProject"  [ngClass]="{ 'is-invalid': submitted && f.descriptionProject.errors }"></div>-->
 
-                     <!-- <textarea rows="5" cols="33" class="form-control" [(ngModel)] = "ObjetProject.description" formControlName="descriptionProject" placeholder="Décrivez brièvement votre projet *" [ngClass]="{ 'is-invalid': submitted && f.descriptionProject.errors }"></textarea>-->
+                       <textarea rows="5" cols="33" class="form-control" [(ngModel)] = "ObjetProject.description" formControlName="descriptionProject" placeholder="Décrivez brièvement votre projet *" [ngClass]="{ 'is-invalid': submitted && f.descriptionProject.errors }"></textarea>
                      
                        <div *ngIf="submitted && f.descriptionProject.errors" class="invalid-feedback">
                           <div *ngIf="f.descriptionProject.errors.required" >Le champ description est important !!!</div>
@@ -90,7 +90,7 @@
                   </div>
                 </div>
 
-                <!--------------------------------------------------------------------->
+                <!---------------------------------------------------------------------->
 
                 <div class="card mb-4 py-3 border-left-primary">
                   <div class="card-body">
@@ -114,7 +114,7 @@
                   </div>
                 </div>
 
-                  <!--------------------------------------------------------------------->
+                  <!---------------------------------------------------------------------->
 
                   <div class="card mb-4 py-3 border-left-primary">
                     <div class="card-body">
@@ -139,13 +139,15 @@
                   </div>
 
 
-                <!--------------------------------------------------------------------->
+                <!---------------------------------------------------------------------->
                 <div class="card mb-4 py-3 border-left-primary">
                   <div class="card-body">
                     <div class="form-group">
                       <input type="number" class="form-control" [(ngModel)]="ObjetProject.montant_minimun" formControlName="montantMinimunProject"     [ngClass]="{ 'is-invalid': submitted && f.montantMinimunProject.errors }"   placeholder="Veuillez saisir le montant minimun  de projet *" />
                         <div *ngIf="submitted && f.montantMinimunProject.errors" class="invalid-feedback">
-                          <div *ngIf="f.montantMinimunProject.errors.required" >Le format champ montant est invalide !!!</div>                        
+                          <div *ngIf="f.montantMinimunProject.errors.required" >Le format champ montant est invalide !!!</div>
+                          
+                          <div *ngIf="f.montantMinimunProject.errors.min" >Le montant doit etre non nul !!!</div>    
                           
                         </div>
                     </div>               
@@ -155,7 +157,7 @@
                 </div>
 
 
-                <!--------------------------------------------------------------------->
+                <!---------------------------------------------------------------------->
 
                 <div class="card mb-4 py-3 border-left-primary">
                   <div class="card-body">
@@ -244,7 +246,7 @@
 
 
 
-                 <!--------------------------------------------------------------------->
+                 <!---------------------------------------------------------------------->
 
 
                 <div class="control-group form-group">
@@ -258,7 +260,7 @@
                       <strong>Erreur!</strong>  Veuillez valider votre captcha
                  </div>
 
-             <!--------------------------------------------------------------------->
+                <!---------------------------------------------------------------------->
 
              <div class="text-center">
 
@@ -269,13 +271,14 @@
              </form>
 
 
-              <!--------------------------------------------------------------------------------------------------------->
+              <!-------------------------------------------------------------------------------------------------------->
+
            </div>
             
             
               <div class="col-lg-4 mb-4">
 
-                 <!------------------------------------------------------------------------------>
+                 <!---------------------------------------------------------------------------->
   
 
                 <div class="add-photo-container">
@@ -455,7 +458,7 @@
     
                         <div class="row" style="margin-bottom:10%">
 
-                            <h5>Associer les liens des reseaux socizux à votre projet:</h5><br/><br/>
+                            <h5>Associer les liens des reseaux sociaux à votre projet:</h5><br/><br/>
 
                             <div class="row">
 

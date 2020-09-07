@@ -22,17 +22,19 @@ export class apiHttpSpringBootService {
   // http://api-spring-boot-crowdlending-api-spring-boot-crowdlending.apps.us-east-2.starter.openshift-online.com/api
 
   // tslint:disable-next-line:max-line-length
+  //--> private apiUrlCloud = 'https://api-springboot-crowdfunding-h2.herokuapp.com/api';
+
   private apiUrlCloud = 'https://api-spring-boot-h2-database.herokuapp.com/api';
-
-
 
   constructor(private http: HttpClient,  @Inject('BASE_URL') baseUrl: string) {
 
-      console.log('BASE_URL = ', baseUrl );
+      console.log('BASE_URL = ', baseUrl, baseUrl.indexOf('http://localhost') );
 
-      if (baseUrl === 'http://localhost:4200/'){
 
-           // this.apiUrlCloud = 'http://localhost:8080/api';      // a reactiver pour le git
+
+      if (baseUrl.indexOf('http://localhost') >= 0 ){
+
+           // this.apiUrlCloud = 'http://localhost:8080/api';
 
       }
   }
@@ -214,6 +216,22 @@ export class apiHttpSpringBootService {
   checkVueProjectByUser(objectProject, objectUser){
 
     const url = this.apiUrlCloud + '/user/projects/' + objectProject.token + '/checkVueProject';
+
+    return this.http.post(url, objectUser);
+
+  }
+
+  getListMessagesRecusByUser(objectUser: UserModel){
+
+    const url = this.apiUrlCloud + '/users/' + objectUser.token + '/messages_recus/all';
+
+    return this.http.post(url, objectUser);
+
+  }
+
+  getListMessagesEnvoyesByUser(objectUser: UserModel){
+
+    const url = this.apiUrlCloud + '/users/' + objectUser.token + '/messages_envoyes/all';
 
     return this.http.post(url, objectUser);
 

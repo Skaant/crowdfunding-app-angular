@@ -44,7 +44,19 @@ export class AccueilComponent implements OnInit {
 
 
             this.userLang = navigator.language || navigator.userLanguage;
-            alert('this.userLang = ' + this.userLang );
+            // alert('this.userLang = ' + this.userLang );
+
+
+   }
+
+   getListProjectsBis(){
+
+    this.apiService.listAllProjectsForVisitor().subscribe((data: any) => {
+
+     }, (error: any) => {
+
+    
+    });
 
 
    }

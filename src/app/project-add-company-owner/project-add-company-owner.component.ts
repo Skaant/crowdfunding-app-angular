@@ -65,7 +65,7 @@ export class ProjectAddCompanyOwnerComponent implements OnInit {
 
      datePickerConfig = {
                         drops: 'up',
-                        format: 'YYYY-MM-DD',
+                        format: 'DD-MM-YYYY',
                         locale: 'fr',
                         addClass: 'form-control',
      };
@@ -156,8 +156,8 @@ export class ProjectAddCompanyOwnerComponent implements OnInit {
                                                 porteProject : ['', Validators.required],
                                                 categorieProject : ['', Validators.required],
                                                 // tslint:disable-next-line:max-line-length
-                                                montantMinimunProject : ['', [Validators.required]],
-                                                dateLimitCollectProject : ['', [Validators.required, Validators.pattern('[0-9]{4}-[0-9]{2}-[0-9]{2}')]],
+                                                montantMinimunProject : ['', [Validators.required, Validators.min(1)]],
+                                                dateLimitCollectProject : ['', [Validators.required, Validators.pattern('[0-9]{2}-[0-9]{2}-[0-9]{4}')]],
                                               //  contrePartieProject: ['', Validators.required],
        });
 
@@ -209,6 +209,8 @@ export class ProjectAddCompanyOwnerComponent implements OnInit {
     if (event < date){
 
            this.isErreurValidProject = true;
+
+           this.tinyAlert('La date limite de projet doit etre superieur à la date actuelle !!!');
     }else{
 
       this.isErreurValidProject = false;

@@ -45,6 +45,7 @@ import { MyFavorisProjectsCompanyOwnerComponent } from './my-favoris-projects-co
 import { MyContribProjectsComponent } from './my-contrib-projects/my-contrib-projects.component';
 // tslint:disable-next-line:max-line-length
 import { ListProjectsByFiltreByTagUserComponent } from './list-projects-by-filtre-by-tag-user/list-projects-by-filtre-by-tag-user.component';
+import { ListMessagerieUserComponent } from './list-messagerie-user/list-messagerie-user.component';
 
 
 import { IdentificationAdminComponent } from './identification-admin/identification-admin.component';
@@ -84,7 +85,7 @@ import { MatDateFormats, MAT_DATE_LOCALE, MAT_DATE_FORMATS } from '@angular/mate
 
 import { ListMessagesContactVisitorAdminComponent } from './list-messages-contact-visitor-admin/list-messages-contact-visitor-admin.component';
 import { ShowMessageContactVisitorAdminComponent } from './show-message-contact-visitor-admin/show-message-contact-visitor-admin.component';
-import { ListMessagerieUserComponent } from './list-messagerie-user/list-messagerie-user.component';
+
 import { ListMessagerieAdminComponent } from './list-messagerie-admin/list-messagerie-admin.component';
 import { ShowMessagerieAdminComponent } from './show-messagerie-admin/show-messagerie-admin.component';
 import { ShowMessagerieUserComponent } from './show-messagerie-user/show-messagerie-user.component';

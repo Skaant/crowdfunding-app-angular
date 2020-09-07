@@ -12,16 +12,7 @@
     "profil_user_button_btnbtnprimarybtnblock": "Mettre à jour votre profil",
     "profil_user_div_alertalertdanger": "Modifier",
 
-    "profil_user_div_alertalertdanger_strong1": "Erreur!",
-
-    "identification_h3": "Identification",
-    "identification_alert_alert_danger": "identification",
-    "identification_alert_alert_danger_strong_erreur": "Erreur!",
-    "identification_login": "Se connecter",
-    "identification_forget_mdp": "Mot de passe oublié ?",
-
-    "templates_user_side_bar_lef_templates_sidebar_brand_text_mx_3": "ESPACE MEMBRE"
-
+    "profil_user_div_alertalertdanger_strong1": "Erreur!"
 
 
 }

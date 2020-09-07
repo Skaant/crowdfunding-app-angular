@@ -6,7 +6,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { DatePipe } from '@angular/common';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
 import {UserModel} from '../interfaces/models';
-
+import Swal from 'sweetalert2/dist/sweetalert2.js';
 
 // https://medium.com/letsboot/lets-pick-a-date-with-ng2-datepicker-1ba2d9593a66
 
@@ -82,11 +82,11 @@ export class IdentificationComponent implements OnInit {
 
     /********************************************************* */
 
-    this.addRecaptchaScript();
+   this.addRecaptchaScript();
 
-    const date = new Date();
+   const date = new Date();
 
-    this.ObjetInscription.date_created = date.toLocaleString('fr-FR', {
+   this.ObjetInscription.date_created = date.toLocaleString('fr-FR', {
       weekday: 'long',
       year: 'numeric',
       month: 'long',
@@ -103,11 +103,15 @@ export class IdentificationComponent implements OnInit {
 
   addEventDateNaissance(event) {
 
+
+
     const date = new Date();
 
     if (event >= date) {
 
       this.isErreurInscription = true;
+
+      this.tinyAlert('La date de naissance doit etre inferiur à la date actuelle !!!');
 
     } else {
 
@@ -128,7 +132,7 @@ export class IdentificationComponent implements OnInit {
       this.renderReCaptcha();
     };
 
-    (function(d, s, id, obj) {      
+    (function(d, s, id, obj) {
       let js, fjs = d.getElementsByTagName(s)[0];
       if (d.getElementById(id)) { obj.renderReCaptcha(); return; }
       js = d.createElement(s); js.id = id;
@@ -207,6 +211,11 @@ export class IdentificationComponent implements OnInit {
     }
 
 
+    // console.log('this.isvalidCaptcha = ', this.isvalidCaptcha);
+
+    // console.log('!this.isErreurInscription = ', !this.isErreurInscription);
+
+
     if (this.isvalidCaptcha && !this.isErreurInscription) {
 
     this.ngxService.start();
@@ -239,9 +248,6 @@ export class IdentificationComponent implements OnInit {
 
     this.ngxService.stop();
 
-    } else {
-
-      this.isErreurCaptcha = true;
     }
 
   }
@@ -254,6 +260,11 @@ export class IdentificationComponent implements OnInit {
 
 
   }
+
+  tinyAlert(message: string){
+
+    Swal.fire(message);
+}
 
 
 

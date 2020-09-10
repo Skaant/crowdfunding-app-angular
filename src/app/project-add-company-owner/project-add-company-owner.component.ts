@@ -453,22 +453,18 @@ addAdressWeb(){
             // alert("toto");
          }
 
-          console.log('this.linkProject = ', this.linkProject);
+          // console.log('this.linkProject = ', this.linkProject);
 
-          const regexTel = new RegExp(/^(01|02|03|04|05|06|07|08|09)[0-9]{8}/g);
+          const myPhoneRegex = new RegExp('^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$');
+          if (myPhoneRegex.test(this.linkProject)) {
+               // Successful match
+           } else {
+            checkControlValueMedia = false;
 
-          console.log(regexTel.test(this.linkProject));
+            this.tinyAlert('Votre numero tel est invalide.exemple de saisie : 0685748546-bis');
+           }
 
-          console.log(regexTel.test(this.linkProject) === false);
-
-          if (regexTel.test(this.linkProject) === false){
-
-           checkControlValueMedia = false;
-
-           this.tinyAlert('Votre numero tel est invalide.exemple de saisie : 0685748546-bis');
-
-         }
-
+         
 
          /************************************************************************ */
 
@@ -490,7 +486,7 @@ addAdressWeb(){
 
        // this.ObjetProject.adressReseauxSociauxProject = this.adressReseauxSociauxProject;
 
-        console.log(objectLinkMedia);
+        // console.log(objectLinkMedia);
 
 
       }

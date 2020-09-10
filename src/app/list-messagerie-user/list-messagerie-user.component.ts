@@ -85,6 +85,18 @@ export class ListMessagerieUserComponent implements OnInit {
 
        this.listMessagesRecus = arrayMessagesRecus;
 
+       // tslint:disable-next-line:prefer-for-of
+       for (let index = 0; index < this.listMessagesRecus.length; index++) {
+
+         if (this.listMessagesRecus[index].bodyMessage.length > 76){
+
+             // alert(this.listMessagesRecus[index].bodyMessage.length);
+
+             this.listMessagesRecus[index].bodyMessage = this.listMessagesRecus[index].bodyMessage.substr(0, 76) + '...';
+
+         }
+       }
+
        this.listMessagesRecus = this.listMessagesRecus.sort((c1, c2) => c2.timestamp - c1.timestamp);
 
 
@@ -100,6 +112,18 @@ export class ListMessagerieUserComponent implements OnInit {
 
 
        this.listMessagesEnvoyes = arrayMessagesRecus;
+
+       // tslint:disable-next-line:prefer-for-of
+       for (let index = 0; index < this.listMessagesEnvoyes.length; index++) {
+
+         if (this.listMessagesEnvoyes[index].bodyMessage.length > 76){
+
+             // alert(this.listMessagesRecus[index].bodyMessage.length);
+
+             this.listMessagesEnvoyes[index].bodyMessage = this.listMessagesEnvoyes[index].bodyMessage.substr(0, 76) + '...';
+
+         }
+       }
 
        this.listMessagesEnvoyes = this.listMessagesEnvoyes.sort((c1, c2) => c2.timestamp - c1.timestamp);
 

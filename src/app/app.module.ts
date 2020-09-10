@@ -46,7 +46,7 @@ import { MyContribProjectsComponent } from './my-contrib-projects/my-contrib-pro
 // tslint:disable-next-line:max-line-length
 import { ListProjectsByFiltreByTagUserComponent } from './list-projects-by-filtre-by-tag-user/list-projects-by-filtre-by-tag-user.component';
 import { ListMessagerieUserComponent } from './list-messagerie-user/list-messagerie-user.component';
-
+import { ShowMessagerieUserComponent } from './show-messagerie-user/show-messagerie-user.component';
 
 import { IdentificationAdminComponent } from './identification-admin/identification-admin.component';
 import { CaptchaIdentificationUserComponent } from './captcha-identification-user/captcha-identification-user.component';
@@ -88,9 +88,11 @@ import { ShowMessageContactVisitorAdminComponent } from './show-message-contact-
 
 import { ListMessagerieAdminComponent } from './list-messagerie-admin/list-messagerie-admin.component';
 import { ShowMessagerieAdminComponent } from './show-messagerie-admin/show-messagerie-admin.component';
-import { ShowMessagerieUserComponent } from './show-messagerie-user/show-messagerie-user.component';
+
 import { ShowMessagerieVisitorAdminComponent } from './show-messagerie-visitor-admin/show-messagerie-visitor-admin.component';
 import { SettingProfilUserComponent } from './setting-profil-user/setting-profil-user.component';
+import { FaqComponent } from './faq/faq.component';
+import { AboutComponent } from './about/about.component';
 
 
 
@@ -165,6 +167,8 @@ export function getBaseUrl() {
     SettingProfilUserComponent,
     ListProjectsByFiltreByTagUserComponent,
     ListProjectsByFiltreByTagAdminComponent,
+    FaqComponent,
+    AboutComponent,
   ],
   imports: [
     BrowserModule,

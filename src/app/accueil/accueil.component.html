@@ -13,25 +13,43 @@
   
     <!-- Page Content -->
     <div class="container">
+
+
+
+      <div class="my-12">
+        <!-- Barre de RECHERCHE pour recherche par catégorie de projets -->
+        <div>
+          <!-- Search form -->
+          <form class="form-inline active-pink-3 active-pink-4">
+            <i class="fas fa-search" aria-hidden="true"></i>
+            <input class="form-control form-control-sm ml-3 w-75" type="text" placeholder="Search"
+              aria-label="Search">
+          </form>
+        </div>
+      </div>
+
+
   
       <!-- Jumbotron Header -->
       <header class="jumbotron my-4">
         <h1 class="display-3">{{'accueil_h1' | translate}}</h1>
-        <p class="lead">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsa, ipsam, eligendi, in quo sunt possimus non incidunt odit vero aliquid similique quaerat nam nobis illo aspernatur vitae fugiat numquam repellat.</p>
-        <a href="#" class="btn btn-primary btn-lg">Call to action!</a>
+        <p class="lead">{{'accueil_h1_p' | translate}}</p>
+        <a routerLink="/faq" routerLinkActive="active" class="btn btn-primary btn-lg">{{'accueil_header_a' | translate}}</a>
 
       </header>
 
+
       <div>
-        <img src="./assets/img/accueil/module1_accueil.2.png"
-     alt="Partie 1 de la page d'accueil"
-        width = "100%"
-        height = "auto"
-     title="module 1 de la page d'accueil">
+        <img src="./assets/img/accueil/module1_accueil.2.png"    alt="Partie 1 de la page d'accueil"       width = "100%"     height = "auto"   title="module 1 de la page d'accueil"  routerLink="/Identification" routerLinkActive="active">
       </div>
   
+      <br>
+    
+      <h1 style="margin-top:2%;color:red">{{'accueil_h1_Projet' | translate}}</h1>
+     
+
       <!-- Page Features -->
-      <div class="row text-center">
+      <div class="row text-center" style="margin-top:2%">
 
         <!--http://placehold.it/500x325-->
   
@@ -83,7 +101,7 @@
               <p class="card-text">{{project.description}}</p>
             </div>
             <div class="card-footer">
-              <a  class="btn btn-primary" [routerLink]="['/visitor-projetcs-show' , project.token ]"  >Consulter</a>
+              <a  class="btn btn-primary" [routerLink]="['/visitor-projetcs-show' , project.token ]"  >{{'accueil_card_footer_a' | translate}}</a>
             </div>
           </div>
         </div>  

@@ -1,6 +1,10 @@
 {
 
     "accueil_h1": "Willkommen bei Lend Me, der ersten multikulturellen Crowdfunding-Site",
+    "accueil_h1_p": "Donner du sens à son épargne. Aider quelqu'un à réaliser son rêve.",
+    "accueil_header_a": "En savoir plus !",
+    "accueil_h1_Projet": "Les projets du moment",
+    "accueil_card_footer_a": "Consulter",
 
     "profil_user_nom_label": "Dein Name",
     "profil_user_prenom_label": "Ihr Vorname",

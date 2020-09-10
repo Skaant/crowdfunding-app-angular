@@ -1,5 +1,9 @@
 {
     "accueil_h1": "Welcome to Lend Me, the first multicultural crowdfunding site",
+    "accueil_h1_p": "Donner du sens à son épargne. Aider quelqu'un à réaliser son rêve.",
+    "accueil_header_a": "En savoir plus !",
+    "accueil_h1_Projet": "Les projets du moment",
+    "accueil_card_footer_a": "Consulter",
 
     "profil_user_nom_label": "Your name",
     "profil_user_prenom_label": "Your first name",

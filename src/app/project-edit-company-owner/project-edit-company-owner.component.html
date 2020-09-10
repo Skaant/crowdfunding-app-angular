@@ -138,7 +138,7 @@
 
                               <textarea rows="5" cols="33" class="form-control" [(ngModel)]="ObjetProject.description"
                                 formControlName="descriptionProject" placeholder="Décrivez brièvement votre projet *"
-                                [ngClass]="{ 'is-invalid': submitted && f.descriptionProject.errors }"></textarea>
+                                [ngClass]="{ 'is-invalid': submitted && f.descriptionProject.errors }">{{ObjetProject.description}}</textarea>
 
                               <div *ngIf="submitted && f.descriptionProject.errors" class="invalid-feedback">
                                 <div *ngIf="f.descriptionProject.errors.required">Le champ description est important !!!
@@ -161,9 +161,7 @@
 
                                 <option value="">Selectionner porté de projet *</option>
 
-                                <option [value]="porteProject.id"
-                                  *ngFor="let porteProject of listPorteProject  let i = index">{{porteProject.nom}}
-                                </option>
+                                <option [value]="porteProject.id"    *ngFor="let porteProject of listPorteProject  let i = index">{{porteProject.nom}} </option>
 
                               </select>
 
@@ -229,12 +227,8 @@
                             <div class="form-group">
 
                               <label>Date limite de collecte de projet * </label><br />
-
-                              <!--(onSelect)="onChangeDateLimiteCollecte($event)"-->
-                              <dp-date-picker class="dp_date_picker" [(ngModel)]="ObjetProject.date_limite_collecte"
-                                formControlName="dateLimitCollectProject"
-                                [ngClass]="{ 'is-invalid': submitted && f.montantMinimunProject.errors }"
-                                [config]="datePickerConfig"></dp-date-picker>
+                             
+                              <dp-date-picker class="dp_date_picker" [(ngModel)]="ObjetProject.date_limite_collecte"  formControlName="dateLimitCollectProject"     [ngClass]="{ 'is-invalid': submitted && f.montantMinimunProject.errors }"         [config]="datePickerConfig"></dp-date-picker>
 
                               <div *ngIf="submitted && f.dateLimitCollectProject.errors"      style="font-size: 80%;color: #e74a3b;">
 

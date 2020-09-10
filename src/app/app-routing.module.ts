@@ -21,7 +21,7 @@ import { MyContribProjectsComponent } from './my-contrib-projects/my-contrib-pro
 // tslint:disable-next-line:max-line-length
 import { ListProjectsByFiltreByTagUserComponent } from './list-projects-by-filtre-by-tag-user/list-projects-by-filtre-by-tag-user.component';
 import { ListMessagerieUserComponent } from './list-messagerie-user/list-messagerie-user.component';
-
+import { ShowMessagerieUserComponent } from './show-messagerie-user/show-messagerie-user.component';
 
 import { IdentificationAdminComponent } from './identification-admin/identification-admin.component';
 import { CaptchaIdentificationUserComponent } from './captcha-identification-user/captcha-identification-user.component';
@@ -31,7 +31,8 @@ import { ListUsersAdminComponent } from './list-users-admin/list-users-admin.com
 import {ShowProfilUserAdminComponent} from './show-profil-user-admin/show-profil-user-admin.component';
 // tslint:disable-next-line:max-line-length
 import { ListProjectsByFiltreByTagAdminComponent } from './list-projects-by-filtre-by-tag-admin/list-projects-by-filtre-by-tag-admin.component';
-
+import { FaqComponent } from './faq/faq.component';
+import { AboutComponent } from './about/about.component';
 
 
 
@@ -39,6 +40,8 @@ const routes: Routes = [
   { path: '', component: AccueilComponent},
   { path: 'page-contact', component: VisitorContactComponent},
   { path: 'form-contact', component: VisitorFormContactComponent},
+  { path: 'faq', component: FaqComponent},
+  { path: 'about', component: AboutComponent},
   { path: 'visitor-projetcs-show/:token', component: VisitorShowProjectComponent},
   { path: 'Identification', component: IdentificationComponent},
   { path: 'captcha-identification', component: CaptchaIdentificationUserComponent},
@@ -60,6 +63,7 @@ const routes: Routes = [
   { path: 'user-projetcs-show/:token', component: ProjectShowCompanyOwnerComponent},
   { path: 'user-search-projetcs-by-tag', component: ListProjectsByFiltreByTagUserComponent},
   { path: 'user-messagerie', component: ListMessagerieUserComponent},
+  { path: 'user-show-message/:token_message/:type_message', component: ShowMessagerieUserComponent},
 ];
 
 @NgModule({

@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 import { TranslateService } from '@ngx-translate/core';
+import { apiHttpSpringBootService } from './../../../api-spring-boot.service';
+import {UserModel, MessageInterneModel} from './../../../interfaces/models';
 
 declare var navigator: any;
 
@@ -12,16 +14,7 @@ declare var navigator: any;
 })
 export class NavTemplatesUserComponent implements OnInit {
 
-  public infosUser = {
-    id: '',
-    nom: '',
-    prenom: '',
-    login: '',
-    password: '',
-    sex: '',
-    photoUser: '',
-    typeCompte: ''
-  };
+  public infosUser: UserModel = new UserModel();
 
   public urlImageProfil: string;
 
@@ -29,8 +22,15 @@ export class NavTemplatesUserComponent implements OnInit {
 
   public userLang: any;
 
+  public users: Array<MessageInterneModel> = [];
 
-  constructor(private router: Router, private cookie: CookieService, public translate: TranslateService) {
+  public nbrMessagesNonLus = 0;
+
+  public listMessagesRecus: Array<MessageInterneModel> = [];
+
+
+  constructor(private router: Router, private cookie: CookieService, public translate: TranslateService,
+              private apiService: apiHttpSpringBootService) {
 
     translate.addLangs(['en', 'fr', 'es']);
 
@@ -46,6 +46,8 @@ export class NavTemplatesUserComponent implements OnInit {
 
       translate.setDefaultLang(this.userLang);
     }
+
+
 
     this.infosUser = JSON.parse(this.cookie.get('infosUser'));
 
@@ -71,6 +73,40 @@ export class NavTemplatesUserComponent implements OnInit {
 
     }
 
+    this.countMessagesNonLus();
+
+    this.listMessagesNonLus();
+
+
+  }
+
+  countMessagesNonLus(){
+
+
+    this.apiService.countListMessagesNonLus(this.infosUser).subscribe((nbrMessages: number) => {
+
+     // alert(nbrMessages);
+
+     this.nbrMessagesNonLus = nbrMessages;
+
+   }, (error: any) => {
+
+
+   });
+
+  }
+
+  listMessagesNonLus(){
+
+    this.apiService.getListMessagesNonLus(this.infosUser).subscribe((dataMessages: Array<MessageInterneModel>) => {
+
+     this.listMessagesRecus = dataMessages;
+ 
+
+   }, (error: any) => {
+
+
+   });
 
   }
 

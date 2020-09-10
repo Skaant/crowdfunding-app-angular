@@ -4,7 +4,7 @@ import {UserModel, ProjectModel, ProjectModelBis,  ImageProjectModel
   , AdressReseauxSociauxProjectModel, commentProjectModel, StatutProjectModel,
   QuestionRepProjectByAdminForUserModel, QuestionRepProjectByUserForAdminModel,
     QuestionRepProjectByUserForUserModel, InvestiteurProjectModelBis, fondInvestorBis, FavorisProjectUserModel,
-    HeartProjectUserModel, LikeProjectUserModel, VueProjectUserModel, NewsProjectModel, CommissionProjectModel} from './interfaces/models';
+    HeartProjectUserModel, LikeProjectUserModel, VueProjectUserModel, NewsProjectModel, CommissionProjectModel, MessageInterneModel} from './interfaces/models';
 import { Observable } from 'rxjs/internal/Observable';
 
 
@@ -22,9 +22,9 @@ export class apiHttpSpringBootService {
   // http://api-spring-boot-crowdlending-api-spring-boot-crowdlending.apps.us-east-2.starter.openshift-online.com/api
 
   // tslint:disable-next-line:max-line-length
-  //--> private apiUrlCloud = 'https://api-springboot-crowdfunding-h2.herokuapp.com/api';
+   private apiUrlCloud = 'https://api-spring-boot-h2-database.herokuapp.com/api';
 
-  private apiUrlCloud = 'https://api-spring-boot-h2-database.herokuapp.com/api';
+
 
   constructor(private http: HttpClient,  @Inject('BASE_URL') baseUrl: string) {
 
@@ -766,7 +766,42 @@ export class apiHttpSpringBootService {
 
   }
 
+  getListMessagesNonLus(objectUser: UserModel){
 
+    const url = this.apiUrlCloud + '/users/' + objectUser.token + '/list_messages_non_lus';
+
+    return this.http.post(url, objectUser);
+
+  }
+
+  countListMessagesNonLus(objectUser: UserModel){
+
+    const url = this.apiUrlCloud + '/users/' + objectUser.token + '/count_messages_non_lus';
+
+    return this.http.post(url, objectUser);
+
+
+
+  }
+
+  getDataMessageInterne(objectUser: UserModel, tokenMessage){
+
+
+    const url = this.apiUrlCloud + '/users/' + objectUser.token + '/messages/' + tokenMessage;
+
+    return this.http.post(url, objectUser);
+
+  }
+
+  updateDataMessageInterne(objectUser: UserModel, objectMessage: MessageInterneModel ){
+
+
+    const url = this.apiUrlCloud + '/users/' + objectUser.token + '/messages/' + objectMessage.token + '/update';
+
+    return this.http.post(url, objectMessage);
+
+
+  }
 
 
 }

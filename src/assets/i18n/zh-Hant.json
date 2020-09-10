@@ -1,8 +1,12 @@
 {
     "accueil_h1": "歡迎使用Lend Me，第一個多元文化眾籌網站",
+    "accueil_h1_p": "Donner du sens à son épargne. Aider quelqu'un à réaliser son rêve.",
+    "accueil_header_a": "En savoir plus !",
+    "accueil_h1_Projet": "Les projets du moment",
+    "accueil_card_footer_a": "Consulter",
 
-    "user_profile_label_name": "您的名字",
-    "profil_user_firstname_label": "您的名字",
+    "profil_user_nom_label": "您的名字",
+    "profil_user_prenom_label": "您的名字",
     "profil_user_mail_label": "您的電子郵件地址",
     "profil_user_sexe_label": "您的性別",
     "profil_user_mdp_label": "您的密碼",

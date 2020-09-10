@@ -67,7 +67,7 @@ export class ProjectEditCompanyOwnerComponent implements OnInit {
 
   datePickerConfig = {
                     drops: 'up',
-                    format: 'DD-MM-YYYY',
+                    format: 'YYYY-MM-DD',
                     locale: 'fr',
                      addClass: 'form-control',
   };
@@ -137,7 +137,11 @@ export class ProjectEditCompanyOwnerComponent implements OnInit {
 
                  this.route.params.subscribe(params => {
 
-                   this.getinfosProject(params.token);
+                  this.getListCategorieProject();
+
+                  this.getListPorteProject();
+
+                  this.getinfosProject(params.token);
 
 
 
@@ -165,7 +169,7 @@ export class ProjectEditCompanyOwnerComponent implements OnInit {
 
   ngOnInit(): void {
 
-
+   
     this.updateProjectForm = this.formBuilder.group({
                                                    nomProject: [ '', Validators.required],
                                                   // descriptionProject: ['', Validators.required],
@@ -179,9 +183,7 @@ export class ProjectEditCompanyOwnerComponent implements OnInit {
 
     this.addRecaptchaScript();
 
-    this.getListCategorieProject();
-
-    this.getListPorteProject();
+   
   }
 
   onChangeDateLimiteCollecte(event){
@@ -418,7 +420,7 @@ export class ProjectEditCompanyOwnerComponent implements OnInit {
 
         //  this.ObjetProjectTemplate.project = dataPorject;
 
-          this.ObjetProject =  dataPorject;
+          this.ObjetProject =  dataPorject;        
 
           if (this.ObjetProject.contrePartieProject === 'Du concret'){
 

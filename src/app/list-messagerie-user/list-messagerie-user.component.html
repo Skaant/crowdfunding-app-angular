@@ -45,7 +45,7 @@
                         <th scope="col">Date</th>
                         <th scope="col">Statut Exp</th>
                         <th scope="col">Message</th>
-                       
+                        <th scope="col">Actions</th>
 
                       </tr>
                     </thead>
@@ -70,8 +70,14 @@
 
                         <td scope="row">
 
-                            {{message_recus.bodyMessage}}
-                         </td>                      
+                          <div class="text-truncate">{{message_recus.bodyMessage}}</div>
+                         </td> 
+                        <td scope="row">
+
+                          <a  class="btn btn-primary" [routerLink]="['/user-show-message' , message_recus.token, 'message_recus' ]" >Consulter</a>
+                        </td> 
+                         
+                         
 
                       </tr>
                     </tbody>
@@ -100,6 +106,7 @@
                             <th scope="col">Date</th>
                             <th scope="col">Statut Dest</th>
                             <th scope="col">Message</th>
+                            <th scope="col">Action</th>
                            
     
                           </tr>
@@ -126,7 +133,11 @@
                             <td scope="row">
     
                                 {{message_envoye.bodyMessage}}
-                             </td>                      
+                             </td> 
+                             <td scope="row">
+
+                              <a  class="btn btn-primary" [routerLink]="['/user-show-message' , message_envoye.token, 'message_envoye' ]" >Consulter</a>
+                            </td>                      
     
                           </tr>
                         </tbody>

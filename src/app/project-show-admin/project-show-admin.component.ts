@@ -11,14 +11,15 @@ import {
   QuestionRepProjectByAdminForUserModel, QuestionRepProjectByUserForAdminModel,
   // tslint:disable-next-line:max-line-length
   QuestionRepProjectByUserForUserModel, InvestiteurProjectModel, fondInvestor, StatistiquesChartsLikeModel, StatistiquesChartsDislikesModel,
-  StatistiquesChartsHeartModel, StatistiquesChartsVueModel, NewsProjectModel, CommissionProjectModel
+  // tslint:disable-next-line:max-line-length
+  StatistiquesChartsHeartModel, StatistiquesChartsVueModel, NewsProjectModel, CommissionProjectModel, PorteProjectModel, CategorieProjectModel
 } from '../interfaces/models';
 
 import { ChartOptions, ChartType, ChartDataSets } from 'chart.js';
 import { Color, Label, MultiDataSet } from 'ng2-charts';
 import { Title } from '@angular/platform-browser';
 
-
+import Swal from 'sweetalert2/dist/sweetalert2.js';
 
 
 @Component({
@@ -201,6 +202,8 @@ public objectCommissionProject: CommissionProjectModel = new CommissionProjectMo
 
             this.route.params.subscribe(params => {
 
+
+
               this.getinfosProject(params.token);
 
             });
@@ -231,7 +234,20 @@ public objectCommissionProject: CommissionProjectModel = new CommissionProjectMo
 
   }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {
+
+    const newProject = new ProjectModel();
+
+    newProject.setPorteProject(new PorteProjectModel());
+
+    newProject.setCategorieProject(new CategorieProjectModel());
+
+    newProject.setStatutProject(new StatutProjectModel());
+
+    newProject.setUserProject(new UserModel());
+
+    this.ObjetProjectTemplate.setProject(newProject);
+  }
 
   getListNewsProject(){
 
@@ -270,7 +286,7 @@ public objectCommissionProject: CommissionProjectModel = new CommissionProjectMo
 
       // console.log('dataPorject = ', dataPorject);
 
-      this.ObjetProjectTemplate.project = dataPorject;
+      this.ObjetProjectTemplate.setProject(dataPorject);
 
       this.titleService.setTitle('Fiche-projet [' + this.ObjetProjectTemplate.project.nom + ']');
 
@@ -298,48 +314,52 @@ public objectCommissionProject: CommissionProjectModel = new CommissionProjectMo
       this.ObjetProjectTemplate.project.description = this.ObjetProjectTemplate.project.description.substring(0, this.ObjetProjectTemplate.project.description.length - 4 );
       }
 
+      // tslint:disable-next-line:max-line-length
+      if (dataPorject._statut_project.nom === 'Valide'  || dataPorject._statut_project.nom === 'Renouvele' || dataPorject._statut_project.nom === 'Termine'){
+
+         this.getListCommentsProject();
+
+         this.getListQuestionsAidesForInvestor();
+
+         this.getListInvestorByProject();
+
+         this.getAllFondsInvest();
+
+         this.getStatustiquesHeartsChart();
+
+         this.getStatustiquesVuesChart();
+
+         this.getStatustiquesLikesChart();
+
+         this.getStatustiquesDislikesChart();
+
+         this.getListNewsProject();
+
+         this.checkCommisionProject();
+
+         this.getListCommentsProject();
+      }
+
+      if (this.ObjetProjectTemplate.project.manager_project) {
+
+        this.showForValidation = true;
+
+        this.getListQuestionsAides();
+
+      }
+
+      this.getListStatutProject();
+
       this.getListArrayAdressReseauxSociauxProject();
 
       this.getAllImageProject();
 
       this.getInfosUser();
 
-      this.getListCommentsProject();
-
-      this.getListQuestionsAidesForInvestor();
-
-      this.getListInvestorByProject();
-
-      this.getAllFondsInvest();
-
-      this.getStatustiquesHeartsChart();
-
-      this.getStatustiquesVuesChart();
-
-      this.getStatustiquesLikesChart();
-
-      this.getStatustiquesDislikesChart();
-
-      this.getListNewsProject();
-
-      this.checkCommisionProject();
 
       this.montantCommision = dataPorject.total_fonds * 0.05;
 
       /******************************************************** */
-
-      if (!this.ObjetProjectTemplate.project.manager_project) {
-
-        this.getListStatutProject();
-
-        this.showForValidation = true;
-
-      }
-
-
-      /******************************************************** */
-
-      this.getListCommentsProject();
 
    /*   this.pollingComment = setInterval(() => {
 
@@ -349,7 +369,7 @@ public objectCommissionProject: CommissionProjectModel = new CommissionProjectMo
 
       /**************************************************** */
 
-      this.getListQuestionsAides();
+
 
   /*    this.polling = setInterval(() => {
 
@@ -888,12 +908,86 @@ getStatustiquesDislikeDaysChart(){
   getListStatutProject() {
 
 
+    if (this.ObjetProjectTemplate.project._statut_project.nom !== 'Annule'  ){
+
+      this.showForValidation = true;
+
+
+    }
+
     this.apiService.getListStatutProject().subscribe((data: Array<StatutProjectModel>) => {
 
 
       console.log('data-ListStatutProject', data);
 
-      this.listeStatusProject = data;
+      console.log('data-Statut-Project =', this.ObjetProjectTemplate.project._statut_project.nom);
+
+      // tslint:disable-next-line:prefer-for-of
+      for (let index = 0; index < data.length; index++) {
+
+        if (this.ObjetProjectTemplate.project._statut_project.nom === 'Attente'){
+
+              if (data[index].nom !== 'Renouvele'  && data[index].nom !== 'Attente' && data[index].nom !== 'Termine'){
+
+                this.listeStatusProject.push(data[index]);
+
+              }
+        }
+
+        /******************************************************* */
+
+        if (this.ObjetProjectTemplate.project._statut_project.nom === 'Valide'){
+
+            if (data[index].nom !== 'En cours' && data[index].nom !== 'Attente' && data[index].nom !== 'Valide'){
+
+              this.listeStatusProject.push(data[index]);
+
+            }
+
+        }
+
+        /******************************************************* */
+
+        if (this.ObjetProjectTemplate.project._statut_project.nom === 'En cours'){
+
+          if (data[index].nom !== 'Renouvele' && data[index].nom !== 'En cours' && data[index].nom !== 'Attente' && data[index].nom !== 'Termine'){
+
+            this.listeStatusProject.push(data[index]);
+
+          }
+
+       }
+
+        /******************************************************* */
+
+        if (this.ObjetProjectTemplate.project._statut_project.nom === 'Renouvele'){
+
+          if (data[index].nom !== 'Renouvele' && data[index].nom !== 'En cours' && data[index].nom !== 'Attente' && data[index].nom !== 'Termine' && data[index].nom !== 'Valide'){
+
+            this.listeStatusProject.push(data[index]);
+
+          }
+
+       }
+
+
+        /******************************************************* */
+
+        if (this.ObjetProjectTemplate.project._statut_project.nom === 'Termine'){
+
+          if ( data[index].nom !== 'Annule' && data[index].nom !== 'En cours' && data[index].nom !== 'Attente' && data[index].nom !== 'Termine' && data[index].nom !== 'Valide'){
+
+            this.listeStatusProject.push(data[index]);
+
+          }
+
+       }
+
+       /********************************************************** */
+
+      }
+
+
 
     }, (error: any) => {
 
@@ -965,7 +1059,17 @@ getStatustiquesDislikeDaysChart(){
 
   onChangeStatutProject() {
 
-    // this.ngxService.start();
+
+
+    this.alertConfirmation();
+
+
+
+  }
+
+  changeStatutByApelApi(){
+
+    this.ngxService.start();
 
     console.log('indexStatut', this.indexStatut);
 
@@ -978,8 +1082,34 @@ getStatustiquesDislikeDaysChart(){
 
       console.log('updateStautProject = ', dataProject);
 
+      this.ngxService.stop();
+
+      this.tinyAlert('Votre changement de statut a été éffactué avec succées');
+
     }, (error: any) => { });
 
+  }
+
+  tinyAlert(message: string){
+
+    Swal.fire(message);
+  }
+
+  alertConfirmation(){
+    Swal.fire({
+      title: 'Vous etes sure?',
+      text: 'Le changement de statut demandé sera :' + this.listeStatusProject[this.indexStatut].nom,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Je confirme le changement du statut.',
+      cancelButtonText: 'J\'annule l\'action.'
+    }).then((result) => {
+      if (result.value) {
+        this.changeStatutByApelApi();
+
+      }
+
+    });
   }
 
 

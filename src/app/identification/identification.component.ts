@@ -97,8 +97,6 @@ export class IdentificationComponent implements OnInit {
 
     });
 
-
-
   }
 
   addEventDateNaissance(event) {
@@ -230,19 +228,15 @@ export class IdentificationComponent implements OnInit {
 
         } else {
 
-          this.infosUser = dataUser;
-
-          this.cookie.set('infosUser', JSON.stringify(this.infosUser));
-
-          this.router.navigate(['/profilUser']);
+             this.tinyAlert('Un email de confirmation à été envoyé dans votre boite email pour valider votre inscription.');
 
 
         }
 
 
-
-
       }, (error: any) => {
+
+            this.tinyAlert('Une erreur produite dans l\'enregistrement .Merci de relancer l\'inscription.');
 
       });
 

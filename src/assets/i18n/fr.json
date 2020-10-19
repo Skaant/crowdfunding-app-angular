@@ -1,22 +1,4 @@
 {
-    "accueil_h1": "Bienvenu sur Lend Me, premier site de crowdfunding multiculturel",
-    "accueil_h1_p": "Donner du sens à son épargne. Aider quelqu'un à réaliser son rêve.",
-    "accueil_header_a": "En savoir plus !",
-    "accueil_h1_Projet": "Les projets du moment",
-    "accueil_card_footer_a": "Consulter",
-
-    "profil_user_nom_label": "Votre nom",
-    "profil_user_prenom_label": "Votre prénom",
-    "profil_user_mail_label": "Votre adresse e-mail",
-    "profil_user_sexe_label": "Votre sexe",
-    "profil_user_mdp_label": "Votre mot de passe",
-    "profil_user_img_label": "Image profil",
-    "profil_user_span_text_label": "Modifier",
-
-    "profil_user_button_btnbtnprimarybtnblock": "Mettre à jour votre profil",
-    "profil_user_div_alertalertdanger": "Modifier",
-
-    "profil_user_div_alertalertdanger_strong1": "Erreur!"
-
-
+    "accueil_h1":"Un accueil chaleureux!",
+    "nom_label":"Votre nom"
 }

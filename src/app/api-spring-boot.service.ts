@@ -22,7 +22,7 @@ export class apiHttpSpringBootService {
   // http://api-spring-boot-crowdlending-api-spring-boot-crowdlending.apps.us-east-2.starter.openshift-online.com/api
 
   // tslint:disable-next-line:max-line-length
-   private apiUrlCloud = 'https://api-spring-boot-h2-database.herokuapp.com/api';
+   private apiUrlCloud = 'https://api-springboot-crowdfunding-h2.herokuapp.com/api';
 
 
 
@@ -34,7 +34,7 @@ export class apiHttpSpringBootService {
 
       if (baseUrl.indexOf('http://localhost') >= 0 ){
 
-           // this.apiUrlCloud = 'http://localhost:8080/api';
+           this.apiUrlCloud = 'http://localhost:8080/api';
 
       }
   }
@@ -140,6 +140,15 @@ export class apiHttpSpringBootService {
     };
 
     return this.http.post<UserModel>(url, objectConnectionBis);
+
+
+  }
+
+  public checkConfirmationInscription(token){
+
+    const  url = this.apiUrlCloud + '/users/checkConfirmationInscription/' + token;
+
+    return this.http.post(url, token);
 
 
   }
@@ -502,6 +511,15 @@ export class apiHttpSpringBootService {
 
   }
 
+
+  listAllProjectsTopConsulteForVisitor(){
+
+    const url = this.apiUrlCloud + '/visitor/projects_top_consulte';
+
+    return this.http.get(url);
+
+  }
+
   listAllProjectsFiltreByTagForUser(tag: string){
 
     const url = this.apiUrlCloud + '/user/projects/searchByKeyword';
@@ -554,9 +572,25 @@ export class apiHttpSpringBootService {
 
 
 
+  getRandomProject(){
+
+    const url = this.apiUrlCloud + '/visitor/random_project';
+
+    return this.http.get(url);
+
+  }
+
   getListCategorieProject(){
 
     const url = this.apiUrlCloud + '/project/all_categories';
+
+    return this.http.get(url);
+
+  }
+
+  getCustumListCategorieProject(){
+
+    const url = this.apiUrlCloud + '/visitor/project/all_categories';
 
     return this.http.get(url);
 

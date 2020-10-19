@@ -4,7 +4,7 @@ import {Router} from '@angular/router';
 import { apiHttpSpringBootService } from './../api-spring-boot.service';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { DatePipe } from '@angular/common';
-import {ProjectModel, templteProjectModel} from '../interfaces/models';
+import {CategorieProjectModel, ProjectModel, templteProjectModel, UserModel} from '../interfaces/models';
 import { CookieService } from 'ngx-cookie-service';
 
 declare var navigator: any;
@@ -18,9 +18,15 @@ export class AccueilComponent implements OnInit {
 
   public listProjects: Array<ProjectModel> = [];
 
+  public templateRandomProject: templteProjectModel = new templteProjectModel();
+
+  public randomCategorie = {id: 0 , nom : '', nbr_projects : 0};
+
   public listtemplateProjects: Array<templteProjectModel> = [];
 
   public listDiffrenceJours  = [];
+
+  public listCategorieProjects = [];
 
   public pollingListProject: any;
 
@@ -34,9 +40,19 @@ export class AccueilComponent implements OnInit {
               // tslint:disable-next-line:align
               , private ngxService: NgxUiLoaderService, private datePipe: DatePipe, private cookie: CookieService) {
 
-                this.titleService.setTitle('accueil');
+                this.titleService.setTitle('accueil');                
 
-                this.getListProjects(this.paramObjectUpdate);
+                this.templateRandomProject.setProject(new ProjectModel());
+
+                this.templateRandomProject.getProject().setUserProject(new UserModel());
+
+                this.templateRandomProject.getProject().setCategorieProject(new CategorieProjectModel());
+
+                this.getListCategoriesProjects();
+
+                this.getRandomProject();
+
+                this.getListProjects();
 
    }
 
@@ -55,23 +71,55 @@ export class AccueilComponent implements OnInit {
 
      }, (error: any) => {
 
-    
+
     });
 
+   }
+
+   getRandomProject(){
+
+    this.apiService.getRandomProject().subscribe((data: ProjectModel) => {
+
+      // console.log(data);
+
+      if (data){
+
+       this.templateRandomProject.project = data;
+
+       this.randomCategorie.id = this.templateRandomProject.project.categoryProject.id;
+
+       this.randomCategorie.nom = this.templateRandomProject.project.categoryProject.nom;
+
+       // tslint:disable-next-line:only-arrow-functions
+       const categorie =  this.listCategorieProjects.filter(function(categorieProject) {
+
+                              return categorieProject.nom === data.categoryProject.nom;
+                        });
+
+       this.randomCategorie =  categorie[0];
+
+       this.templateRandomProject.nbrJours = this.calculNombredeJoursProjectRandom();
+
+
+       this.templateRandomProject.tauxFinance = (data.total_fonds / data.montant_minimun) * 100;       
+
+       console.log('this.templateRandomProject.tauxFinance = ', this.templateRandomProject.tauxFinance);
+
+       console.log('categorie = ', categorie);
+
+      }
+
+
+     }, (error: any) => { });
 
    }
 
 
-  getListProjects(paramObjectUpdate){
-
-    if (!paramObjectUpdate.action_update){
-
-      this.ngxService.start();
-    }
+  getListProjects(){
 
 
 
-    this.apiService.listAllProjectsForVisitor().subscribe((data: any) => {
+    this.apiService.listAllProjectsTopConsulteForVisitor().subscribe((data: any) => {
 
       // console.log(data);
 
@@ -109,25 +157,54 @@ export class AccueilComponent implements OnInit {
           // alert("pas de projects-1");
       }
 
-      if (!paramObjectUpdate.action_update){
-
-        this.ngxService.stop();
-      }
-
-
-
-
 
   }, (error: any) => {
 
-    if (!paramObjectUpdate.action_update){
 
-      this.ngxService.stop();
-    }
  });
 
 
-  }
+ }
+
+ getListCategoriesProjects(){
+
+
+  this.apiService.getCustumListCategorieProject().subscribe((data: any) => {
+
+    // console.log(data);
+
+    if (data){
+
+       this.listCategorieProjects = data;
+
+
+    }else{
+
+        // alert("pas de projects-1");
+    }
+
+
+   }, (error: any) => {});
+
+
+}
+
+ calculNombredeJoursProjectRandom(){
+
+  const date1 = new Date();
+
+  const date2 = new Date(this.templateRandomProject.project.date_limite_collecte);
+
+  const diff = this.dateDiff(date1, date2);
+
+  return  'J-' + diff.day;
+
+    // this.listProjects[indexProject].nbrJoursRestant = 'J-' + diff.day;
+
+   // tslint:disable-next-line:max-line-length
+   //  console.log('Entre le ' + date1.toString() + ' et ' + date2.toString() + ' il y a ' + diff.day + ' jours, ' + diff.hour + ' heures, ' + diff.min + ' minutes et ' + diff.sec + ' secondes');
+
+ }
 
   calculNombredeJours(indexProject){
 
@@ -176,45 +253,50 @@ formaterListProject() {
   for (let index = 0; index < this.listProjects.length; index++) {
 
 
+    /****************************************************************** */
+
+    this.listtemplateProjects[index].tauxFinance = (this.listProjects[index].total_fonds / this.listProjects[index].montant_minimun) * 100;
+
+
    /******************************************************************* */
 
 
-   if (this.listProjects[index]._statut_project.nom === 'Attente'){
+    if (this.listProjects[index]._statut_project.nom === 'Attente'){
 
 
      this.listProjects[index]._statut_project.nom = 'Attente';
 
     }
 
-   if (this.listProjects[index]._statut_project.nom === 'Valide'){
+    if (this.listProjects[index]._statut_project.nom === 'Valide'){
 
 
      this.listProjects[index]._statut_project.nom = 'Validé';
 
     }
 
-   if (this.listProjects[index]._statut_project.nom === 'Termine'){
+    if (this.listProjects[index]._statut_project.nom === 'Termine'){
 
 
      this.listProjects[index]._statut_project.nom = 'Terminé';
 
     }
 
-   if (this.listProjects[index]._statut_project.nom === 'Annule'){
+    if (this.listProjects[index]._statut_project.nom === 'Annule'){
 
 
      this.listProjects[index]._statut_project.nom = 'Annulé';
 
     }
 
-   if (this.listProjects[index]._statut_project.nom === 'En cours'){
+    if (this.listProjects[index]._statut_project.nom === 'En cours'){
 
 
      this.listProjects[index]._statut_project.nom = 'En cours';
 
     }
 
-   if (this.listProjects[index]._statut_project.nom === 'Renouvele'){
+    if (this.listProjects[index]._statut_project.nom === 'Renouvele'){
 
 
      this.listProjects[index]._statut_project.nom = 'Renouvele';
@@ -223,7 +305,7 @@ formaterListProject() {
 
      /********************************************************** */
 
-   this.listtemplateProjects[index].dateLimiteCollecteFormate = this.datePipe.transform(this.listProjects[index].date_limite_collecte, 'dd-MM-yyyy');
+    this.listtemplateProjects[index].dateLimiteCollecteFormate = this.datePipe.transform(this.listProjects[index].date_limite_collecte, 'dd-MM-yyyy');
 
 
   /********************************************************** */

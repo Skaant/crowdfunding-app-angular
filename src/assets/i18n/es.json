@@ -1,22 +1,4 @@
 {
-    "accueil_h1": "Bienvenido a Lend Me, el primer sitio de financiación colectiva multicultural",
-    "accueil_h1_p": "Donner du sens à son épargne. Aider quelqu'un à réaliser son rêve.",
-    "accueil_header_a": "En savoir plus !",
-    "accueil_h1_Projet": "Les projets du moment",
-    "accueil_card_footer_a": "Consulter",
-
-    "profil_user_nom_label": "Su nombre",
-    "profil_user_prenom_label": "Su nombre",
-    "profil_user_mail_label": "Su dirección de correo electrónico",
-    "profil_user_sexe_label": "Tu sexo",
-    "profil_user_mdp_label": "Tu contraseña:",
-    "profil_user_img_label": "Imagen de perfil",
-    "profil_user_span_text_label": "Editar",
-
-    "profil_user_button_btnbtnprimarybtnblock": "actualiza tu perfil",
-    "profil_user_div_alertalertdanger": "Modificar",
-
-    "profil_user_div_alertalertdanger_strong": "¡Error!"
-
-
+    "accueil_h1":"¡Una cálida bienvenida!",
+    "nom_label":"su nombre"
 }

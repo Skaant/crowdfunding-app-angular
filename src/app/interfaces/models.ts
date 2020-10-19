@@ -293,6 +293,28 @@ export class ProjectModel {
         total_like: number;
         total_dislike: number;
         total_vues: number;
+        total_comments: number;
+        setPorteProject(newPorteProject: PorteProjectModel): void{
+
+          this._porte_project = newPorteProject;
+
+        }
+        setCategorieProject(newCategorieProject: CategorieProjectModel): void{
+
+          this.categoryProject = newCategorieProject;
+
+        }
+        setStatutProject(newStatutProject: StatutProjectModel): void{
+
+          this._statut_project = newStatutProject;
+
+        }
+
+        setUserProject(newUser: UserModel): void{
+
+          this._user = newUser;
+
+        }
   }
 
 
@@ -306,7 +328,20 @@ export class templteProjectModel {
                            heartUser: string;
                            likeUsers: string;
                            dislikeUser: string;
-  }
+                           tauxFinance: number;
+
+                           getProject(): ProjectModel{
+
+                              return this.project;
+
+                           }
+
+                           setProject(newProject: ProjectModel): void{
+
+                                  this.project = newProject;
+
+                            }
+       }
 
 export class QuestionRepProjectByUserForUserModelBis {
     id: number;
@@ -339,6 +374,7 @@ export class ProjectModelBis {
     total_like: number;
     total_dislike: number;
     total_vues: number;
+    total_comments: number;
 
 }
 
@@ -351,6 +387,7 @@ export class templteProjectModelBis {
     heartUser: string;
     likeUsers: string;
     dislikeUser: string;
+    tauxFinance: number;
 }
 
 

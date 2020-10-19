@@ -14,6 +14,7 @@ import { IPayPalConfig, ICreateOrderRequest } from 'ngx-paypal';
 
 import { IpServiceService } from './../ip-service.service';
 
+import Swal from 'sweetalert2/dist/sweetalert2.js';
 
 declare var window: any;
 
@@ -1288,7 +1289,36 @@ export class ProjectShowCompanyOwnerComponent implements OnInit {
 
      }
 
-     sendDemandeInvest(){
+    tinyAlert(message: string){
+
+      Swal.fire(message);
+    }
+  
+    alertConfirmation(){
+      Swal.fire({
+        title: 'Vous etes sure?',
+        //text: 'Le changement de statut demandé sera :' + this.listeStatusProject[this.indexStatut].nom,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Je confirme l\'envoi de la demande .',
+        cancelButtonText: 'J\'annule l\'action.'
+      }).then((result) => {
+        if (result.value) {
+          this.sendDemandeInvestByApi();
+  
+        }
+  
+      });
+    }
+
+    sendDemandeInvest(){
+
+
+          this.alertConfirmation();
+
+    }
+
+     sendDemandeInvestByApi(){
 
       const date = new Date();
 
@@ -1311,6 +1341,8 @@ export class ProjectShowCompanyOwnerComponent implements OnInit {
       this.apiService.sendDemandeInvestorByProject(this.infosUser,  this.ObjetDemandeInvest).subscribe((dataSend: any) => {
 
          console.log(dataSend);
+
+         this.tinyAlert('Votre demande a été envoyé avec succées');
 
          this.getAllFondsInvest();
 

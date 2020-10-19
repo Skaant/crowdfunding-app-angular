@@ -33,6 +33,7 @@ import { VisitorFormContactComponent } from './visitor-form-contact/visitor-form
 
 
 import { IdentificationComponent } from './identification/identification.component';
+import { ConfirmInscriptionUserComponent } from './confirm-inscription-user/confirm-inscription-user.component';
 import { ProfilUserComponent } from './profil-user/profil-user.component';
 
 import { ProjectAddCompanyOwnerComponent } from './project-add-company-owner/project-add-company-owner.component';
@@ -91,8 +92,7 @@ import { ShowMessagerieAdminComponent } from './show-messagerie-admin/show-messa
 
 import { ShowMessagerieVisitorAdminComponent } from './show-messagerie-visitor-admin/show-messagerie-visitor-admin.component';
 import { SettingProfilUserComponent } from './setting-profil-user/setting-profil-user.component';
-import { FaqComponent } from './faq/faq.component';
-import { AboutComponent } from './about/about.component';
+
 
 
 
@@ -167,8 +167,7 @@ export function getBaseUrl() {
     SettingProfilUserComponent,
     ListProjectsByFiltreByTagUserComponent,
     ListProjectsByFiltreByTagAdminComponent,
-    FaqComponent,
-    AboutComponent,
+    ConfirmInscriptionUserComponent,
   ],
   imports: [
     BrowserModule,

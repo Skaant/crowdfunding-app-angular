@@ -11,6 +11,9 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import Swal from 'sweetalert2/dist/sweetalert2.js';
 
+// tslint:disable-next-line:import-spacing
+import * as  Constants  from './../constants/constants';
+
 declare var window: any;
 
 
@@ -545,9 +548,38 @@ deleteMediaByProject(indexObjectAdresse , objectAdresse){
 
   imageInputChange(imageInput: any) {
 
-    this.imageFile = imageInput.files[0];
 
-  }
+    if (imageInput.files[0].type.indexOf('image') <= -1) {
+
+     this.tinyAlert('Veuillez telecharger une image');
+
+   }else{
+
+     const img = new Image();
+
+     img.src = window.URL.createObjectURL(imageInput.files[0]);
+
+     // console.log(imageInput.files[0].type.indexOf('image'));
+
+     img.onload = () => {
+
+         if (img.width < Constants.WIDTHIMAGEAFFICHEPRINCIPALPPROJECT && img.height < Constants.HEIGHTIMAGEAFFICHEPRINCIPALPROJECT){
+
+             // tslint:disable-next-line:max-line-length
+             this.tinyAlert('Veuillez telecharger une autre image svp.la largeur doit depasser ' + Constants.WIDTHIMAGEAFFICHEPRINCIPALPPROJECT + 'px et la hauteur ' + Constants.HEIGHTIMAGEAFFICHEPRINCIPALPROJECT + 'px');
+
+
+         }else{
+
+           this.imageFile = imageInput.files[0];
+         }
+
+     };
+
+   }
+
+
+ }
 
   addImage() {
 

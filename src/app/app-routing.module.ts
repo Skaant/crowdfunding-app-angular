@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 
 import { IdentificationComponent } from './identification/identification.component';
+import { ConfirmInscriptionUserComponent } from './confirm-inscription-user/confirm-inscription-user.component';
 import { ProfilUserComponent } from './profil-user/profil-user.component';
 
 import { AccueilComponent } from './accueil/accueil.component';
@@ -31,8 +32,7 @@ import { ListUsersAdminComponent } from './list-users-admin/list-users-admin.com
 import {ShowProfilUserAdminComponent} from './show-profil-user-admin/show-profil-user-admin.component';
 // tslint:disable-next-line:max-line-length
 import { ListProjectsByFiltreByTagAdminComponent } from './list-projects-by-filtre-by-tag-admin/list-projects-by-filtre-by-tag-admin.component';
-import { FaqComponent } from './faq/faq.component';
-import { AboutComponent } from './about/about.component';
+
 
 
 
@@ -40,12 +40,11 @@ const routes: Routes = [
   { path: '', component: AccueilComponent},
   { path: 'page-contact', component: VisitorContactComponent},
   { path: 'form-contact', component: VisitorFormContactComponent},
-  { path: 'faq', component: FaqComponent},
-  { path: 'about', component: AboutComponent},
-  { path: 'visitor-projetcs-show/:token', component: VisitorShowProjectComponent},
+  { path: 'visitor-project-show/:token', component: VisitorShowProjectComponent},
   { path: 'Identification', component: IdentificationComponent},
   { path: 'captcha-identification', component: CaptchaIdentificationUserComponent},
-  { path: 'Identification/:deconnection', component: IdentificationComponent},
+  { path: 'confirmation-inscription-user/:token', component: ConfirmInscriptionUserComponent},
+  { path: 'Identification/:token', component: IdentificationComponent},
   { path: 'profilUser', component: ProfilUserComponent},
   { path: 'admin-login', component: IdentificationAdminComponent},
   { path: 'admin-projetcs', component: ProjectsListAdminComponent},

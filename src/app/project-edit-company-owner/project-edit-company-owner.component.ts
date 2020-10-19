@@ -8,15 +8,18 @@ import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { DatePipe } from '@angular/common';
 import { DomSanitizer } from '@angular/platform-browser';
 import {UserModel, ProjectModel, ProjectModelBis, templteProjectModelBis,
-       ImageProjectModel, AdressReseauxSociauxProjectModel} from '../interfaces/models';
+       ImageProjectModel, AdressReseauxSociauxProjectModel, PorteProjectModel, CategorieProjectModel} from '../interfaces/models';
 
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import Swal from 'sweetalert2/dist/sweetalert2.js';
 
-
+// tslint:disable-next-line:import-spacing
+import * as  Constants  from './../constants/constants';
 
 declare var window: any;
+
+
 
 @Component({
   selector: 'app-project-edit-company-owner',
@@ -25,7 +28,8 @@ declare var window: any;
 })
 export class ProjectEditCompanyOwnerComponent implements OnInit {
 
- @ViewChild('recaptcha', {static: true }) recaptchaElement: ElementRef;
+ @ViewChild('recaptcha', {static: false }) recaptchaElement: ElementRef;
+
 
   public infosUser: UserModel = new UserModel();
 
@@ -137,12 +141,15 @@ export class ProjectEditCompanyOwnerComponent implements OnInit {
 
                  this.route.params.subscribe(params => {
 
+                  this.ObjetProject.setPorteProject(new PorteProjectModel());
+
+                  this.ObjetProject.setCategorieProject(new CategorieProjectModel());
+
                   this.getListCategorieProject();
 
                   this.getListPorteProject();
 
                   this.getinfosProject(params.token);
-
 
 
                  });
@@ -169,22 +176,51 @@ export class ProjectEditCompanyOwnerComponent implements OnInit {
 
   ngOnInit(): void {
 
-   
+    this.addRecaptchaScript();
+
     this.updateProjectForm = this.formBuilder.group({
                                                    nomProject: [ '', Validators.required],
-                                                  // descriptionProject: ['', Validators.required],
+                                                   descriptionProject: ['', Validators.required],
                                                    porteProject : ['', Validators.required],
                                                    categorieProject : ['', Validators.required],
                                                    // tslint:disable-next-line:max-line-length
                                                    montantMinimunProject : ['', [Validators.required, Validators.min(1)]],
-                                                   dateLimitCollectProject : ['', [Validators.required, Validators.pattern('[0-9]{2}-[0-9]{2}-[0-9]{4}')]],
+                                                   dateLimitCollectProject : ['', [Validators.required, Validators.pattern('[0-9]{4}-[0-9]{2}-[0-9]{2}')]],
                                                    //  contrePartieProject: ['', Validators.required],
                          });
 
-    this.addRecaptchaScript();
 
-   
   }
+
+  addRecaptchaScript() {
+
+    window.grecaptchaCallback = () => {
+      this.renderReCaptcha();
+    };
+
+    (function(d, s, id, obj){
+      let js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) { obj.renderReCaptcha(); return; }
+      js = d.createElement(s); js.id = id;
+      js.src = 'https://www.google.com/recaptcha/api.js?onload=grecaptchaCallback&amp;render=explicit';
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'recaptcha-jssdk', this));
+
+  }
+
+  renderReCaptcha() {
+    window.grecaptcha.render(this.recaptchaElement.nativeElement, {
+      sitekey: '6Lf4I6gZAAAAAMp1E9YI1FJghdQ20CNRtAV9d55y',
+      callback: (response) => {
+          console.log('response', response);
+
+          this.isvalidCaptcha = true;
+
+          this.isErreurCaptcha = false;
+      }
+    });
+  }
+
 
   onChangeDateLimiteCollecte(event){
 
@@ -209,7 +245,36 @@ export class ProjectEditCompanyOwnerComponent implements OnInit {
 
   imageInputChange(imageInput: any) {
 
-    this.imageFile = imageInput.files[0];
+
+     if (imageInput.files[0].type.indexOf('image') <= -1) {
+
+      this.tinyAlert('Veuillez telecharger une image');
+
+    }else{
+
+      const img = new Image();
+
+      img.src = window.URL.createObjectURL(imageInput.files[0]);
+
+      // console.log(imageInput.files[0].type.indexOf('image'));
+
+      img.onload = () => {
+
+          if (img.width < Constants.WIDTHIMAGEAFFICHEPRINCIPALPPROJECT && img.height < Constants.HEIGHTIMAGEAFFICHEPRINCIPALPROJECT){
+
+              // tslint:disable-next-line:max-line-length
+              this.tinyAlert('Veuillez telecharger une autre image svp.la largeur doit depasser ' + Constants.WIDTHIMAGEAFFICHEPRINCIPALPPROJECT + 'px et la hauteur ' + Constants.HEIGHTIMAGEAFFICHEPRINCIPALPROJECT + 'px');
+
+
+          }else{
+
+            this.imageFile = imageInput.files[0];
+          }
+
+      };
+
+    }
+
 
   }
 
@@ -420,7 +485,7 @@ export class ProjectEditCompanyOwnerComponent implements OnInit {
 
         //  this.ObjetProjectTemplate.project = dataPorject;
 
-          this.ObjetProject =  dataPorject;        
+          this.ObjetProject =  dataPorject;
 
           if (this.ObjetProject.contrePartieProject === 'Du concret'){
 
@@ -455,34 +520,6 @@ export class ProjectEditCompanyOwnerComponent implements OnInit {
 
     }
 
-    addRecaptchaScript() {
-
-      window.grecaptchaCallback = () => {
-        this.renderReCaptcha();
-      };
-
-      (function(d, s, id, obj){
-        let js, fjs = d.getElementsByTagName(s)[0];
-        if (d.getElementById(id)) { obj.renderReCaptcha(); return; }
-        js = d.createElement(s); js.id = id;
-        js.src = 'https://www.google.com/recaptcha/api.js?onload=grecaptchaCallback&amp;render=explicit';
-        fjs.parentNode.insertBefore(js, fjs);
-      }(document, 'script', 'recaptcha-jssdk', this));
-
-    }
-
-    renderReCaptcha() {
-      window.grecaptcha.render(this.recaptchaElement.nativeElement, {
-        sitekey: '6Lf4I6gZAAAAAMp1E9YI1FJghdQ20CNRtAV9d55y',
-        callback: (response) => {
-            console.log('response', response);
-
-            this.isvalidCaptcha = true;
-
-            this.isErreurCaptcha = false;
-        }
-      });
-    }
 
 
 
@@ -519,13 +556,7 @@ export class ProjectEditCompanyOwnerComponent implements OnInit {
 
   }
 
-  onChangeTypeMediaProject(event){
-
-
-
-
-
-  }
+  onChangeTypeMediaProject(event){ }
 
   addAdressWeb(){
 

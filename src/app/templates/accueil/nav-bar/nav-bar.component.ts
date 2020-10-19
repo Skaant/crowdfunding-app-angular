@@ -35,8 +35,6 @@ export class NavBarAccueilComponent implements OnInit {
 
   switchLang(lang: string) {
 
-    // alert(lang);
-
     this.translate.use(lang);
 
     this.cookie.set('lang_translat_user', lang);

@@ -6957,7 +6957,7 @@ button.bg-dark:focus {
   .align-content-md-start {
     align-content: flex-start !important;
   }
-  .align-content-md-end {
+.align-content-md-end {
     align-content: flex-end !important;
   }
   .align-content-md-center {
@@ -9551,7 +9551,7 @@ a.text-dark:hover, a.text-dark:focus {
 }
 
 html {
-  position: relative;
+ position: relative;
   min-height: 100%;
 }
 
